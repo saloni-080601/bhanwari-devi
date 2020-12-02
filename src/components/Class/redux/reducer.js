@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   error: false,
   data: null,
+  
 }
 
 export default (state = initialState, action) => {

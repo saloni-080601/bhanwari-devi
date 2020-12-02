@@ -32,6 +32,7 @@ const Routing = () => {
         path={ PATHS.CLASS }
         component={ Class }
       />*/}
+      
       <PrivateRoute
         exact
         path={ PATHS.CLASS}
