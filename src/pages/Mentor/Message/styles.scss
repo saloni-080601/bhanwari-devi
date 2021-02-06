@@ -1,0 +1,92 @@
+@import "../../../sass/mixins.scss";
+
+.chat-message {
+  padding: 16px;
+  margin: 12px 0;
+  display: inline-flex;
+  border-radius: 12px;
+  border-bottom-left-radius: 0;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  font-weight: 500;
+  padding-right: 48px;
+  position: relative;
+
+  &-other {
+    align-self: flex-start;
+    background-color: #f6f8fa;
+    margin-left: 70px;
+    @include breakpoint-mobile {
+      margin-left: 60px;
+    }
+  }
+
+  &-self {
+    align-self: flex-end;
+    background-color: #2971ff;
+    margin-right: 50px;
+    // color: #fff;
+    @include breakpoint-mobile {
+      margin-right: 10px;
+    }
+  }
+
+  &-action {
+    background-color: transparent;
+    color: #626667;
+    font-style: italic;
+    align-self: center;
+    box-shadow: none;
+  }
+
+  .actions-dropdown-trigger {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding-right: 16px;
+  }
+}
+
+.dd-button:hover {
+  background-color: #eeeeee;
+}
+
+.dd-input {
+  display: none;
+}
+
+.dd-menu {
+  position: absolute;
+  top: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0;
+  right: 8px;
+  margin: 2px 0 0 0;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  list-style-type: none;
+}
+
+.dd-input + .dd-menu {
+  display: none;
+  position: absolute;
+}
+
+.dd-input:checked + .dd-menu {
+  display: block;
+}
+
+.dd-menu li {
+  padding: 10px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dd-menu li:hover {
+  background-color: #f6f6f6;
+}
