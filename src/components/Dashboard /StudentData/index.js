@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 // import { METHODS } from "../../services/api";
+import { useDebounce } from "use-debounce";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import "./styles.scss";
@@ -15,8 +16,10 @@ const getPartnerIdFromUrl = () => {
 };
 
 function StudentData() {
+  const [message, setMessage] = useState("");
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedText] = useDebounce(searchTerm);
   const user = useSelector(({ User }) => User);
 
   useEffect(() => {
@@ -26,38 +29,60 @@ function StudentData() {
         headers: { Authorization: user.data.token },
       })
       .then((res) => {
-        setStudents(res.data);
+        if (res.data.length < 1) {
+          setMessage("There are no results to display");
+        } else {
+          const data = res.data.map((item) => {
+            return {
+              ...item,
+              created_at: moment(item.created_at.replace("Z", "")).format(
+                "DD-MM-YYYY"
+              ),
+              classes_registered: item.classes_registered.map((item) => {
+                return {
+                  ...item,
+                  start_time: moment(item.start_time.replace("Z", "")).format(
+                    "DD-MM-YYYY"
+                  ),
+                  item,
+                  end_time: moment(item.end_time.replace("Z", "")).format(
+                    "hh:mm a"
+                  ),
+                };
+              }),
+            };
+          });
+          setStudents(data);
+        }
       });
   }, []);
 
-  const handleSearchChange = (e) => {
-    e.preventDefault();
-    setSearchTerm(e.target.value);
-  };
-
   return (
-    <>
-      <div className="table-search">
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={handleSearchChange}
-          value={searchTerm}
-        />
-      </div>
-      <table className="student-overview-table">
+    <div className="container-table">
+      <input
+        className="Search-bar"
+        type="text"
+        placeholder="Search by student name,class...."
+        value={debouncedText}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+        }}
+      />
+
+      <table className="student-overview-table" style={{ marginTop: "30px" }}>
         <thead>
           <tr>
             <th>Students Name</th>
-            <th>Enrolled On </th>
-            <th>Number of class attend</th>
-            <th>Last class title</th>
-            <th>Last class attended </th>
+            <th>Enroll date </th>
+            <th>Total Classes Attended</th>
+            <th>Last Class Title</th>
+            <th>Last Class Date </th>
+            <th>Last Class Time</th>
+            <th>Avg Class Rating</th>
           </tr>
         </thead>
-
-        {students.length > 0 &&
-          students
+        <tbody>
+          {students
             .filter((searchValue) => {
               if (searchTerm == "") {
                 return searchValue;
@@ -69,35 +94,31 @@ function StudentData() {
                 return searchValue;
               }
             })
-
+            .slice(0, 10)
             .map((item) => {
-              const classEnrollDate =
-                item.created_at && item.created_at.replace("Z", "");
-
               return (
                 <tr key={item.id}>
-                  <td>
+                  <td data-column="Name">
                     <Link
-                      style={{ textDecoration: "none" }}
+                      className="t-data"
                       to={{
                         pathname: "/student",
-                        state: { pass: item.classes_registered },
+                        state: {
+                          pass: item.classes_registered,
+                          passName: item.name,
+                        },
                       }}
                     >
-                      <td className="T-data" data-column="Students Name">
-                        {item.name}
-                      </td>
+                      {item.name}
                     </Link>
                   </td>
-                  <td data-column="Enrolled On">
-                    {moment(classEnrollDate).format("DD-MM-YYYY")}
-                  </td>
-                  <td data-column="classes attend">
+                  <td data-column="Enrolled On">{item.created_at}</td>
+                  <td data-column="Total classes ">
                     {" "}
                     {item.classes_registered.length}
                   </td>
 
-                  <td>
+                  <td data-column="Last class title">
                     {item.classes_registered &&
                     item.classes_registered.length > 0 &&
                     item.classes_registered[item.classes_registered.length - 1][
@@ -108,26 +129,36 @@ function StudentData() {
                         ]["title"]
                       : "NA"}
                   </td>
-                  <td>
+                  <td data-column="Last class date">
                     {item.classes_registered &&
                     item.classes_registered.length > 0 &&
-                    moment(
-                      item.classes_registered[
-                        item.classes_registered.length - 1
-                      ]["end_time"].replace("Z", "")
-                    ).format("DD-MM-YYYY") != ""
-                      ? moment(
-                          item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["end_time"].replace("Z", "")
-                        ).format("DD-MM-YYYY")
+                    item.classes_registered[item.classes_registered.length - 1][
+                      "start_time"
+                    ]
+                      ? item.classes_registered[
+                          item.classes_registered.length - 1
+                        ]["start_time"]
                       : "NA"}
                   </td>
+                  <td data-column="Last class time">
+                    {item.classes_registered &&
+                    item.classes_registered.length > 0 &&
+                    item.classes_registered[item.classes_registered.length - 1][
+                      "end_time"
+                    ]
+                      ? item.classes_registered[
+                          item.classes_registered.length - 1
+                        ]["end_time"]
+                      : "NA"}
+                  </td>
+                  <td data-column="Avg Class Rating ">{"no data"}</td>
                 </tr>
               );
             })}
+          {message ? <h1>{message}</h1> : null}
+        </tbody>
       </table>
-    </>
+    </div>
   );
 }
 
