@@ -19,7 +19,6 @@ function PartnerDashboard() {
         headers: { Authorization: user.data.token },
       })
       .then((res) => {
-        console.log(res, "patnerData");
         setPartners(res.data);
       });
   }, []);

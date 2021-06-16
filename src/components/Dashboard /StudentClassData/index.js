@@ -64,9 +64,20 @@ function StudentClassData(props) {
                     <td data-column="Language">{languageMap[item.lang]}</td>
                     <td data-column="Date">{item.start_time}</td>
                     <td data-column="Class Rating">
-                      {item.feedback.feedback || ""
-                        ? item.feedback.feedback
-                        : "NA"}{" "}
+                      {[1, 2, 3, 4, 5].map((star) => {
+                        return item.feedback.feedback > 0 &&
+                          star <= item.feedback.feedback ? (
+                          <span
+                            className="fa fa-star"
+                            style={{ color: "#D55F31" }}
+                          ></span>
+                        ) : (
+                          <span
+                            className="fa fa-star"
+                            style={{ color: "gray" }}
+                          ></span>
+                        );
+                      })}
                     </td>
                   </tr>
                 );
