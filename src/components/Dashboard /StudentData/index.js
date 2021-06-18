@@ -94,7 +94,7 @@ function StudentData() {
                 return searchValue;
               }
             })
-            .slice(0, 10)
+            // .slice(0, 10)
             .map((item) => {
               return (
                 <tr key={item.id}>
