@@ -12,6 +12,9 @@ function StudentClassData(props) {
     ta: "Tamil",
   };
 
+  // let stars = 0;
+  // let totalStarts = props.location.state.pass.length;
+
   return (
     <div className="container-for-table">
       <p className="studentName">
@@ -45,6 +48,10 @@ function StudentClassData(props) {
             props.location.state.pass
               .filter((searchValue) => {
                 if (searchTerm == "") {
+                  // console.log(
+                  //   "props.location.state.pass",
+                  //   props.location.state.pass
+                  // );
                   return searchValue;
                 } else if (
                   searchValue.title
@@ -56,6 +63,10 @@ function StudentClassData(props) {
               })
               // .slice(0, 10)
               .map((item) => {
+                // stars = stars + Number(item.feedback.feedback);
+                // console.log("feedback", item.feedback.feedback);
+                // console.log("stars", stars);
+                // console.log("Average stars", stars / totalStarts);
                 return (
                   <tr key={item.id}>
                     <td data-column="Title">{item.title}</td>

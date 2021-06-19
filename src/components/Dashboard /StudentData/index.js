@@ -96,6 +96,11 @@ function StudentData() {
             })
             // .slice(0, 10)
             .map((item) => {
+              let getStars = 0;
+              let totalStarts = item.classes_registered.length * 5;
+              item.classes_registered.map((stars) => {
+                getStars = getStars + Number(stars.feedback.feedback);
+              });
               return (
                 <tr key={item.id}>
                   <td data-column="Name">
@@ -151,7 +156,22 @@ function StudentData() {
                         ]["end_time"]
                       : "NA"}
                   </td>
-                  <td data-column="Avg Class Rating ">{"no data"}</td>
+                  <td data-column="Avg Class Rating ">
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      return Math.ceil(getStars / totalStarts) > 0 &&
+                        star <= Math.ceil(getStars / totalStarts) ? (
+                        <span
+                          className="fa fa-star"
+                          style={{ color: "#D55F31" }}
+                        ></span>
+                      ) : (
+                        <span
+                          className="fa fa-star"
+                          style={{ color: "gray" }}
+                        ></span>
+                      );
+                    })}
+                  </td>
                 </tr>
               );
             })}

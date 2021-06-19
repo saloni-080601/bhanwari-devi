@@ -44,9 +44,9 @@ function PartnerDashboard() {
         previousLabel={"Previous"}
         nextLabel={"Next"}
         pageLabelBuilder={(page) => page + 5 * number}
-        // pageRangeDisplayed={[6, 10]}
+        // pageRangeDisplayed={[1, 10]}
         pageCount={pageCount}
-        initialPage={6}
+        initialPage={0}
         onPageChange={changePage}
         containerClassName={"paginationBttns"}
         previousLinkClassName={"previousBttn"}
