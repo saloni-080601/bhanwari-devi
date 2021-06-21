@@ -6,11 +6,15 @@ import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import { PATHS } from "../../../constant";
 import { useSelector } from "react-redux";
+import { Sort } from "@material-ui/icons";
 
 function PartnerDashboard() {
-  const [pageNumber, setPageNumber] = useState();
+  const [pageNumber, setPageNumber] = useState(); //current page
   const [partners, setPartners] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [ascendingAlphabetically, setAscendingAlphabetically] = useState(true);
+  const [ascendingNumerically, setAscendingNumerically] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [debouncedText] = useDebounce(searchTerm);
   const user = useSelector(({ User }) => User);
 
@@ -38,13 +42,32 @@ function PartnerDashboard() {
     setPageNumber(selected);
   };
 
+  const Partners = partners.filter((searchValue) => {
+    if (searchTerm == "") {
+      return searchValue;
+    } else if (
+      searchValue.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return searchValue;
+    }
+  });
+
+  const sortByName = () => {
+    setAscendingAlphabetically(!ascendingAlphabetically);
+    setLoading(true);
+  };
+
+  const sortByStudentsNumber = () => {
+    setAscendingNumerically(!ascendingNumerically);
+    setLoading(false);
+  };
+
   return (
     <>
       <ReactPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}
         pageLabelBuilder={(page) => page + 5 * number}
-        // pageRangeDisplayed={[1, 10]}
         pageCount={pageCount}
         initialPage={0}
         onPageChange={changePage}
@@ -69,40 +92,103 @@ function PartnerDashboard() {
         <table style={{ marginTop: "30px" }} className="table">
           <thead>
             <tr>
-              <th>Partners Name</th>
-              <th>Number of students</th>
+              <th>
+                Partners Name
+                <button type="button" onClick={sortByName}>
+                  A-Z/Z-A
+                </button>
+              </th>
+              <th>
+                Number of students
+                <button type="button" onClick={sortByStudentsNumber}>
+                  ^
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
-            {partners
-              .filter((searchValue) => {
-                if (searchTerm == "") {
-                  return searchValue;
-                } else if (
-                  searchValue.name
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-                ) {
-                  return searchValue;
-                }
-              })
-              .slice(pagesVisited, pagesVisited + usersPerPage)
-              .map((item) => {
-                return (
-                  <tr key={item.id}>
-                    <td data-label="Name">
-                      <Link
-                        className="t-data"
-                        to={`${PATHS.PARTNERS}/${item.id}`}
-                      >
-                        {" "}
-                        {item.name}
-                      </Link>
-                    </td>
-                    <td data-label="Total students">{item.users}</td>
-                  </tr>
-                );
-              })}
+            {loading
+              ? ascendingAlphabetically
+                ? Partners.slice(pagesVisited, pagesVisited + usersPerPage).map(
+                    (item) => {
+                      return (
+                        <tr key={item.id}>
+                          <td data-label="Name">
+                            <Link
+                              className="t-data"
+                              to={`${PATHS.PARTNERS}/${item.id}`}
+                            >
+                              {" "}
+                              {item.name}
+                            </Link>
+                          </td>
+                          <td data-label="Total students">{item.users}</td>
+                        </tr>
+                      );
+                    }
+                  )
+                : Partners.reverse()
+                    .slice(pagesVisited, pagesVisited + usersPerPage)
+                    .map((item) => {
+                      return (
+                        <tr key={item.id}>
+                          <td data-label="Name">
+                            <Link
+                              className="t-data"
+                              to={`${PATHS.PARTNERS}/${item.id}`}
+                            >
+                              {" "}
+                              {item.name}
+                            </Link>
+                          </td>
+                          <td data-label="Total students">{item.users}</td>
+                        </tr>
+                      );
+                    })
+              : ascendingNumerically
+              ? Partners.slice(0)
+                  .sort(function (a, b) {
+                    return a.users - b.users;
+                  })
+                  .slice(pagesVisited, pagesVisited + usersPerPage)
+                  .map((item) => {
+                    return (
+                      <tr key={item.id}>
+                        <td data-label="Name">
+                          <Link
+                            className="t-data"
+                            to={`${PATHS.PARTNERS}/${item.id}`}
+                          >
+                            {" "}
+                            {item.name}
+                          </Link>
+                        </td>
+                        <td data-label="Total students">{item.users}</td>
+                      </tr>
+                    );
+                  })
+              : Partners.slice(0)
+                  .sort(function (a, b) {
+                    return a.users - b.users;
+                  })
+                  .reverse()
+                  .slice(pagesVisited, pagesVisited + usersPerPage)
+                  .map((item) => {
+                    return (
+                      <tr key={item.id}>
+                        <td data-label="Name">
+                          <Link
+                            className="t-data"
+                            to={`${PATHS.PARTNERS}/${item.id}`}
+                          >
+                            {" "}
+                            {item.name}
+                          </Link>
+                        </td>
+                        <td data-label="Total students">{item.users}</td>
+                      </tr>
+                    );
+                  })}
           </tbody>
         </table>
       </div>
