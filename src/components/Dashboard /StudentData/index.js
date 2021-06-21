@@ -19,6 +19,7 @@ function StudentData() {
   const [message, setMessage] = useState("");
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [ascendingAlphabetically, setAscendingAlphabetically] = useState(true);
   const [debouncedText] = useDebounce(searchTerm);
   const user = useSelector(({ User }) => User);
 
@@ -57,6 +58,20 @@ function StudentData() {
       });
   }, []);
 
+  const Students = students.filter((searchValue) => {
+    if (searchTerm == "") {
+      return searchValue;
+    } else if (
+      searchValue.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return searchValue;
+    }
+  });
+
+  const sortByStudentsName = () => {
+    setAscendingAlphabetically(!ascendingAlphabetically);
+  };
+
   return (
     <div className="container-table">
       <input
@@ -72,7 +87,12 @@ function StudentData() {
       <table className="student-overview-table" style={{ marginTop: "30px" }}>
         <thead>
           <tr>
-            <th>Students Name</th>
+            <th>
+              Students Name
+              <button type="button" onClick={sortByStudentsName}>
+                ^
+              </button>
+            </th>
             <th>Enroll date </th>
             <th>Total Classes Attended</th>
             <th>Last Class Title</th>
@@ -82,99 +102,184 @@ function StudentData() {
           </tr>
         </thead>
         <tbody>
-          {students
-            .filter((searchValue) => {
-              if (searchTerm == "") {
-                return searchValue;
-              } else if (
-                searchValue.name
-                  .toLowerCase()
-                  .includes(searchTerm.toLowerCase())
-              ) {
-                return searchValue;
-              }
-            })
-            // .slice(0, 10)
-            .map((item) => {
-              let getStars = 0;
-              let totalStarts = item.classes_registered.length * 5;
-              item.classes_registered.map((stars) => {
-                getStars = getStars + Number(stars.feedback.feedback);
-              });
-              return (
-                <tr key={item.id}>
-                  <td data-column="Name">
-                    <Link
-                      className="t-data"
-                      to={{
-                        pathname: "/student",
-                        state: {
-                          pass: item.classes_registered,
-                          passName: item.name,
-                        },
-                      }}
-                    >
-                      {item.name}
-                    </Link>
-                  </td>
-                  <td data-column="Enrolled On">{item.created_at}</td>
-                  <td data-column="Total classes ">
-                    {" "}
-                    {item.classes_registered.length}
-                  </td>
+          {ascendingAlphabetically
+            ? Students.slice(0)
+                .sort(function (a, b) {
+                  var nameA = a.name.toLowerCase();
+                  var nameB = b.name.toLowerCase();
+                  return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+                })
+                // .slice(0, 10)
+                .map((item) => {
+                  let getStars = 0;
+                  let totalStarts = item.classes_registered.length * 5;
+                  // console.log("students", students);
+                  item.classes_registered.map((stars) => {
+                    getStars = getStars + Number(stars.feedback.feedback);
+                  });
+                  return (
+                    <tr key={item.id}>
+                      <td data-column="Name">
+                        <Link
+                          className="t-data"
+                          to={{
+                            pathname: "/student",
+                            state: {
+                              pass: item.classes_registered,
+                              passName: item.name,
+                            },
+                          }}
+                        >
+                          {item.name}
+                        </Link>
+                      </td>
+                      <td data-column="Enrolled On">{item.created_at}</td>
+                      <td data-column="Total classes ">
+                        {" "}
+                        {item.classes_registered.length}
+                      </td>
 
-                  <td data-column="Last class title">
-                    {item.classes_registered &&
-                    item.classes_registered.length > 0 &&
-                    item.classes_registered[item.classes_registered.length - 1][
-                      "title"
-                    ] != ""
-                      ? item.classes_registered[
+                      <td data-column="Last class title">
+                        {item.classes_registered &&
+                        item.classes_registered.length > 0 &&
+                        item.classes_registered[
                           item.classes_registered.length - 1
-                        ]["title"]
-                      : "NA"}
-                  </td>
-                  <td data-column="Last class date">
-                    {item.classes_registered &&
-                    item.classes_registered.length > 0 &&
-                    item.classes_registered[item.classes_registered.length - 1][
-                      "start_time"
-                    ]
-                      ? item.classes_registered[
+                        ]["title"] != ""
+                          ? item.classes_registered[
+                              item.classes_registered.length - 1
+                            ]["title"]
+                          : "NA"}
+                      </td>
+                      <td data-column="Last class date">
+                        {item.classes_registered &&
+                        item.classes_registered.length > 0 &&
+                        item.classes_registered[
                           item.classes_registered.length - 1
                         ]["start_time"]
-                      : "NA"}
-                  </td>
-                  <td data-column="Last class time">
-                    {item.classes_registered &&
-                    item.classes_registered.length > 0 &&
-                    item.classes_registered[item.classes_registered.length - 1][
-                      "end_time"
-                    ]
-                      ? item.classes_registered[
+                          ? item.classes_registered[
+                              item.classes_registered.length - 1
+                            ]["start_time"]
+                          : "NA"}
+                      </td>
+                      <td data-column="Last class time">
+                        {item.classes_registered &&
+                        item.classes_registered.length > 0 &&
+                        item.classes_registered[
                           item.classes_registered.length - 1
                         ]["end_time"]
-                      : "NA"}
-                  </td>
-                  <td data-column="Avg rating ">
-                    {[1, 2, 3, 4, 5].map((star) => {
-                      return Math.ceil(getStars / totalStarts) > 0 &&
-                        star <= Math.ceil(getStars / totalStarts) ? (
-                        <span
-                          className="fa fa-star"
-                          style={{ color: "#D55F31" }}
-                        ></span>
-                      ) : (
-                        <span
-                          className="fa fa-star"
-                          style={{ color: "gray" }}
-                        ></span>
-                      );
-                    })}
-                  </td>
-                </tr>
-              );
-            })}
+                          ? item.classes_registered[
+                              item.classes_registered.length - 1
+                            ]["end_time"]
+                          : "NA"}
+                      </td>
+                      <td data-column="Avg Class Rating ">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          return Math.ceil(getStars / totalStarts) > 0 &&
+                            star <= Math.ceil(getStars / totalStarts) ? (
+                            <span
+                              className="fa fa-star"
+                              style={{ color: "#D55F31" }}
+                            ></span>
+                          ) : (
+                            <span
+                              className="fa fa-star"
+                              style={{ color: "gray" }}
+                            ></span>
+                          );
+                        })}
+                      </td>
+                    </tr>
+                  );
+                })
+            : Students.slice(0)
+                .sort(function (a, b) {
+                  var nameA = a.name.toLowerCase();
+                  var nameB = b.name.toLowerCase();
+                  return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+                })
+                .reverse()
+                // .slice(0, 10)
+                .map((item) => {
+                  let getStars = 0;
+                  let totalStarts = item.classes_registered.length * 5;
+                  // console.log("students", students);
+                  item.classes_registered.map((stars) => {
+                    getStars = getStars + Number(stars.feedback.feedback);
+                  });
+                  return (
+                    <tr key={item.id}>
+                      <td data-column="Name">
+                        <Link
+                          className="t-data"
+                          to={{
+                            pathname: "/student",
+                            state: {
+                              pass: item.classes_registered,
+                              passName: item.name,
+                            },
+                          }}
+                        >
+                          {item.name}
+                        </Link>
+                      </td>
+                      <td data-column="Enrolled On">{item.created_at}</td>
+                      <td data-column="Total classes ">
+                        {" "}
+                        {item.classes_registered.length}
+                      </td>
+
+                      <td data-column="Last class title">
+                        {item.classes_registered &&
+                        item.classes_registered.length > 0 &&
+                        item.classes_registered[
+                          item.classes_registered.length - 1
+                        ]["title"] != ""
+                          ? item.classes_registered[
+                              item.classes_registered.length - 1
+                            ]["title"]
+                          : "NA"}
+                      </td>
+                      <td data-column="Last class date">
+                        {item.classes_registered &&
+                        item.classes_registered.length > 0 &&
+                        item.classes_registered[
+                          item.classes_registered.length - 1
+                        ]["start_time"]
+                          ? item.classes_registered[
+                              item.classes_registered.length - 1
+                            ]["start_time"]
+                          : "NA"}
+                      </td>
+                      <td data-column="Last class time">
+                        {item.classes_registered &&
+                        item.classes_registered.length > 0 &&
+                        item.classes_registered[
+                          item.classes_registered.length - 1
+                        ]["end_time"]
+                          ? item.classes_registered[
+                              item.classes_registered.length - 1
+                            ]["end_time"]
+                          : "NA"}
+                      </td>
+                      <td data-column="Avg Class Rating ">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          return Math.ceil(getStars / totalStarts) > 0 &&
+                            star <= Math.ceil(getStars / totalStarts) ? (
+                            <span
+                              className="fa fa-star"
+                              style={{ color: "#D55F31" }}
+                            ></span>
+                          ) : (
+                            <span
+                              className="fa fa-star"
+                              style={{ color: "gray" }}
+                            ></span>
+                          );
+                        })}
+                      </td>
+                    </tr>
+                  );
+                })}
           {message ? <h1>{message}</h1> : null}
         </tbody>
       </table>
