@@ -31,6 +31,7 @@ function PartnerDashboard() {
   // const pageCount = Math.ceil(partners.length / usersPerPage);
 
   const pageCount = 5;
+  // const pageCount = 24;
 
   const number = 0;
 
@@ -40,33 +41,38 @@ function PartnerDashboard() {
 
   return (
     <>
-      <ReactPaginate
-        previousLabel={"Previous"}
-        nextLabel={"Next"}
-        pageLabelBuilder={(page) => page + 5 * number}
-        // pageRangeDisplayed={[1, 10]}
-        pageCount={pageCount}
-        initialPage={0}
-        onPageChange={changePage}
-        containerClassName={"paginationBttns"}
-        previousLinkClassName={"previousBttn"}
-        nextLinkClassName={"nextBttn"}
-        disabledClassName={"paginationDisabled"}
-        activeClassName={"paginationActive"}
-      />
-
       <div className="table-container">
-        <input
-          className="Search-box"
-          type="text"
-          placeholder="Search..."
-          value={debouncedText}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-          }}
-        />
-
-        <table style={{ marginTop: "30px" }} className="table">
+        <div className="container-for-Search">
+          <div>
+            <input
+              className="Search-box"
+              type="text"
+              placeholder="Search..."
+              value={debouncedText}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+            />
+          </div>
+          <div className="last-item">
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageLabelBuilder={(page) => page + 5 * number}
+              // pageRangeDisplayed={5}
+              pageCount={pageCount}
+              initialPage={0}
+              // marginPagesDisplayed={0}
+              onPageChange={changePage}
+              containerClassName={"paginationBttns"}
+              previousLinkClassName={"previousBttn"}
+              nextLinkClassName={"nextBttn"}
+              disabledClassName={"paginationDisabled"}
+              activeClassName={"paginationActive"}
+            />
+          </div>
+        </div>
+        <table className="table">
           <thead>
             <tr>
               <th>Partners Name</th>

@@ -156,7 +156,7 @@ function StudentData() {
                         ]["end_time"]
                       : "NA"}
                   </td>
-                  <td data-column="Avg Class Rating ">
+                  <td data-column="Avg rating ">
                     {[1, 2, 3, 4, 5].map((star) => {
                       return Math.ceil(getStars / totalStarts) > 0 &&
                         star <= Math.ceil(getStars / totalStarts) ? (
