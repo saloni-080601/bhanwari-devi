@@ -137,7 +137,6 @@ function StudentData() {
                         {" "}
                         {item.classes_registered.length}
                       </td>
-
                       <td data-column="Last class title">
                         {item.classes_registered &&
                         item.classes_registered.length > 0 &&

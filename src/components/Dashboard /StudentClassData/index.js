@@ -137,10 +137,6 @@ function StudentClassData(props) {
                     })
                     // .slice(0, 10)
                     .map((item) => {
-                      console.log(
-                        "item.start_time",
-                        typeof Number(item.start_time)
-                      );
                       return tableData(item);
                     })
                 ) : (
@@ -210,8 +206,6 @@ function StudentClassData(props) {
               totalClass
                 .slice(0)
                 .sort(function (a, b) {
-                  console.log("dateA", new Date(a.start_time));
-                  console.log("dateB", new Date(b.start_time));
                   const dateA = new Date(a.start_time);
                   const dateB = new Date(b.start_time);
                   return dateB - dateA;
