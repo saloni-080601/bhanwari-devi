@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import { PATHS } from "../../../constant";
 import { useSelector } from "react-redux";
-import { Sort } from "@material-ui/icons";
+// import { Sort } from "@material-ui/icons";
 
 function PartnerDashboard() {
   const [pageNumber, setPageNumber] = useState(); //current page

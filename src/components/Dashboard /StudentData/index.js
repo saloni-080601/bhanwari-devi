@@ -113,7 +113,6 @@ function StudentData() {
                 .map((item) => {
                   let getStars = 0;
                   let totalStarts = item.classes_registered.length * 5;
-                  console.log("students", students);
                   item.classes_registered.map((stars) => {
                     getStars = getStars + Number(stars.feedback.feedback);
                   });
@@ -202,7 +201,6 @@ function StudentData() {
                 .map((item) => {
                   let getStars = 0;
                   let totalStarts = item.classes_registered.length * 5;
-                  console.log("students", students);
                   item.classes_registered.map((stars) => {
                     getStars = getStars + Number(stars.feedback.feedback);
                   });

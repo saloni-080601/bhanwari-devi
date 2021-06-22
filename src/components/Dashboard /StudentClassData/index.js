@@ -6,6 +6,10 @@ function StudentClassData(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [ascendingByClass, setAscendingByClass] = useState(true);
   const [ascendingByFacilitator, setAscendingByFacilitator] = useState(true);
+  const [ascendingByClassRating, setAscendingByClassRating] = useState(true);
+  const [ascendingByClassDate, setAscendingByClassDate] = useState(true);
+  const [asceDescByNumber, setAsceDescByNumber] = useState(true);
+  const [asceDescByAlphabet, setAsceDescByAlphabet] = useState(true);
   const [loading, setLoading] = useState(true);
   const [debouncedText] = useDebounce(searchTerm);
   const languageMap = {
@@ -25,14 +29,50 @@ function StudentClassData(props) {
     }
   });
 
+  const tableData = (item) => {
+    return (
+      <tr key={item.id}>
+        <td data-column="Title">{item.title}</td>
+        <td data-column="Class Id">{item.id}</td>
+        <td data-column="Facilitator">{item.facilitator_name}</td>
+        <td data-column="Language">{languageMap[item.lang]}</td>
+        <td data-column="Date">{item.start_time}</td>
+        <td data-column="Class Rating">
+          {[1, 2, 3, 4, 5].map((star) => {
+            return item.feedback.feedback > 0 &&
+              star <= item.feedback.feedback ? (
+              <span className="fa fa-star" style={{ color: "#D55F31" }}></span>
+            ) : (
+              <span className="fa fa-star" style={{ color: "gray" }}></span>
+            );
+          })}
+        </td>
+      </tr>
+    );
+  };
+
   const sortByClassName = () => {
     setAscendingByClass(!ascendingByClass);
     setLoading(true);
+    setAsceDescByAlphabet(true);
   };
 
   const sortByClassFacilitator = () => {
     setAscendingByFacilitator(!ascendingByFacilitator);
+    setLoading(true);
+    setAsceDescByAlphabet(false);
+  };
+
+  const sortByClassRating = () => {
+    setAscendingByClassRating(!ascendingByClassRating);
     setLoading(false);
+    setAsceDescByNumber(true);
+  };
+
+  const sortByClassDate = () => {
+    setAscendingByClassDate(!ascendingByClassDate);
+    setLoading(false);
+    setAsceDescByNumber(false);
   };
 
   return (
@@ -69,164 +109,129 @@ function StudentClassData(props) {
               </button>
             </th>
             <th>Language</th>
-            <th>Class Date </th>
-            <th>Class Rating </th>
+            <th>
+              Class Date
+              <button type="button" onClick={sortByClassDate}>
+                ^
+              </button>
+            </th>
+            <th>
+              Class Rating
+              <button type="button" onClick={sortByClassRating}>
+                ^
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
           {props.location.state.pass && props.location.state.pass.length > 0 ? (
             loading ? (
-              ascendingByClass ? (
+              asceDescByAlphabet ? (
+                ascendingByClass ? (
+                  totalClass
+                    .slice(0)
+                    .sort(function (a, b) {
+                      const numberA = a.title.toLowerCase();
+                      const numberB = b.title.toLowerCase();
+                      return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
+                    })
+                    // .slice(0, 10)
+                    .map((item) => {
+                      console.log(
+                        "item.start_time",
+                        typeof Number(item.start_time)
+                      );
+                      return tableData(item);
+                    })
+                ) : (
+                  totalClass
+                    .slice(0)
+                    .sort(function (a, b) {
+                      const numberA = a.title.toLowerCase();
+                      const numberB = b.title.toLowerCase();
+                      return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
+                    })
+                    .reverse()
+                    // .slice(0, 10)
+                    .map((item) => {
+                      return tableData(item);
+                    })
+                )
+              ) : ascendingByFacilitator ? (
                 totalClass
                   .slice(0)
                   .sort(function (a, b) {
-                    const numberA = a.title.toLowerCase();
-                    const numberB = b.title.toLowerCase();
+                    const numberA = a.facilitator_name.toLowerCase();
+                    const numberB = b.facilitator_name.toLowerCase();
                     return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
                   })
                   // .slice(0, 10)
                   .map((item) => {
-                    console.log("totalClass", totalClass);
-                    return (
-                      <tr key={item.id}>
-                        <td data-column="Title">{item.title}</td>
-                        <td data-column="Class Id">{item.id}</td>
-                        <td data-column="Facilitator">
-                          {item.facilitator_name}
-                        </td>
-                        <td data-column="Language">{languageMap[item.lang]}</td>
-                        <td data-column="Date">{item.start_time}</td>
-                        <td data-column="Class Rating">
-                          {[1, 2, 3, 4, 5].map((star) => {
-                            return item.feedback.feedback > 0 &&
-                              star <= item.feedback.feedback ? (
-                              <span
-                                className="fa fa-star"
-                                style={{ color: "#D55F31" }}
-                              ></span>
-                            ) : (
-                              <span
-                                className="fa fa-star"
-                                style={{ color: "gray" }}
-                              ></span>
-                            );
-                          })}
-                        </td>
-                      </tr>
-                    );
+                    return tableData(item);
                   })
               ) : (
                 totalClass
                   .slice(0)
                   .sort(function (a, b) {
-                    const numberA = a.title.toLowerCase();
-                    const numberB = b.title.toLowerCase();
+                    const numberA = a.facilitator_name.toLowerCase();
+                    const numberB = b.facilitator_name.toLowerCase();
                     return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
                   })
                   .reverse()
                   // .slice(0, 10)
                   .map((item) => {
-                    return (
-                      <tr key={item.id}>
-                        <td data-column="Title">{item.title}</td>
-                        <td data-column="Class Id">{item.id}</td>
-                        <td data-column="Facilitator">
-                          {item.facilitator_name}
-                        </td>
-                        <td data-column="Language">{languageMap[item.lang]}</td>
-                        <td data-column="Date">{item.start_time}</td>
-                        <td data-column="Class Rating">
-                          {[1, 2, 3, 4, 5].map((star) => {
-                            return item.feedback.feedback > 0 &&
-                              star <= item.feedback.feedback ? (
-                              <span
-                                className="fa fa-star"
-                                style={{ color: "#D55F31" }}
-                              ></span>
-                            ) : (
-                              <span
-                                className="fa fa-star"
-                                style={{ color: "gray" }}
-                              ></span>
-                            );
-                          })}
-                        </td>
-                      </tr>
-                    );
+                    return tableData(item);
                   })
               )
-            ) : ascendingByFacilitator ? (
+            ) : asceDescByNumber ? (
+              ascendingByClassRating ? (
+                totalClass
+                  .slice(0)
+                  .sort(function (a, b) {
+                    return a.feedback.feedback - b.feedback.feedback;
+                  })
+                  // .slice(0, 10)
+                  .map((item) => {
+                    return tableData(item);
+                  })
+              ) : (
+                totalClass
+                  .slice(0)
+                  .sort(function (a, b) {
+                    return b.feedback.feedback - a.feedback.feedback;
+                  })
+                  // .reverse()
+                  // .slice(0, 10)
+                  .map((item) => {
+                    return tableData(item);
+                  })
+              )
+            ) : ascendingByClassDate ? (
               totalClass
                 .slice(0)
                 .sort(function (a, b) {
-                  const numberA = a.facilitator_name.toLowerCase();
-                  const numberB = b.facilitator_name.toLowerCase();
-                  return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
+                  console.log("dateA", new Date(a.start_time));
+                  console.log("dateB", new Date(b.start_time));
+                  const dateA = new Date(a.start_time);
+                  const dateB = new Date(b.start_time);
+                  return dateB - dateA;
                 })
                 // .slice(0, 10)
                 .map((item) => {
-                  return (
-                    <tr key={item.id}>
-                      <td data-column="Title">{item.title}</td>
-                      <td data-column="Class Id">{item.id}</td>
-                      <td data-column="Facilitator">{item.facilitator_name}</td>
-                      <td data-column="Language">{languageMap[item.lang]}</td>
-                      <td data-column="Date">{item.start_time}</td>
-                      <td data-column="Class Rating">
-                        {[1, 2, 3, 4, 5].map((star) => {
-                          return item.feedback.feedback > 0 &&
-                            star <= item.feedback.feedback ? (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "#D55F31" }}
-                            ></span>
-                          ) : (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "gray" }}
-                            ></span>
-                          );
-                        })}
-                      </td>
-                    </tr>
-                  );
+                  return tableData(item);
                 })
             ) : (
               totalClass
                 .slice(0)
                 .sort(function (a, b) {
-                  const numberA = a.facilitator_name.toLowerCase();
-                  const numberB = b.facilitator_name.toLowerCase();
-                  return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
+                  const dateA = new Date(a.start_time);
+                  const dateB = new Date(b.start_time);
+                  return dateB - dateA;
                 })
                 .reverse()
                 // .slice(0, 10)
                 .map((item) => {
-                  return (
-                    <tr key={item.id}>
-                      <td data-column="Title">{item.title}</td>
-                      <td data-column="Class Id">{item.id}</td>
-                      <td data-column="Facilitator">{item.facilitator_name}</td>
-                      <td data-column="Language">{languageMap[item.lang]}</td>
-                      <td data-column="Date">{item.start_time}</td>
-                      <td data-column="Class Rating">
-                        {[1, 2, 3, 4, 5].map((star) => {
-                          return item.feedback.feedback > 0 &&
-                            star <= item.feedback.feedback ? (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "#D55F31" }}
-                            ></span>
-                          ) : (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "gray" }}
-                            ></span>
-                          );
-                        })}
-                      </td>
-                    </tr>
-                  );
+                  return tableData(item);
                 })
             )
           ) : (
