@@ -9,7 +9,8 @@ import { useSelector } from "react-redux";
 
 function PartnerDashboard() {
   const [pageNumber, setPageNumber] = useState(0); //current page
-
+  const [countPage, setCountPage] = useState(2);
+  const [isUpdateCountPage, setIsUpdateCountPage] = useState(true);
   const [partners, setPartners] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedText] = useDebounce(searchTerm);
@@ -26,12 +27,22 @@ function PartnerDashboard() {
         }
       )
       .then((res) => {
-        // console.log(res, "give me 10 data");
         setPartners(res.data);
+        getCountPageNumber(res.data);
       });
   }, [pageNumber]);
 
-  // const number = 0;
+  const getCountPageNumber = (response) => {
+    if (response.length === 0) {
+      setIsUpdateCountPage(false);
+    } else if (isUpdateCountPage) {
+      if (pageNumber > 10) {
+        setCountPage(pageNumber + 1);
+      } else {
+        setCountPage((preState) => preState + 1);
+      }
+    }
+  };
 
   const changePage = ({ selected }) => {
     setPageNumber(selected);
@@ -73,6 +84,7 @@ function PartnerDashboard() {
               initialPage={0}
               marginPagesDisplayed={0}
               onPageChange={changePage}
+              pageCount={countPage}
               containerClassName={"paginationBttns"}
               previousLinkClassName={"previousBttn"}
               nextLinkClassName={"nextBttn"}
