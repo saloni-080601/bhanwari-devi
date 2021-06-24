@@ -67,6 +67,26 @@ tr:hover {
   padding: 12px 20px 12px 40px;
 }
 
+.sortButton {
+  margin-left: 55%;
+  border: 0;
+  background: transparent;
+}
+
+// .sortButton {
+//   margin-left:20%;
+// }
+
+.sortNameButton {
+  margin-left: 83%;
+  border: 0;
+  background: transparent;
+}
+
+// .sortNameButton {
+//   margin-left:70%;
+// }
+
 @media (max-width: 768px) {
   .table thead {
     display: none;
@@ -103,6 +123,14 @@ tr:hover {
   .Search-box {
     width: 60%;
   }
+
+  // .sortButton {
+  //   margin-left: 20%;
+  // }
+
+  // .sortNameButton {
+  //   margin-left:20%;
+  // }
 }
 
 .paginationBttns {

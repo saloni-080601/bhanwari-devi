@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BsArrowUpDown } from "react-icons/bs";
 import "./styles.scss";
 import { useDebounce } from "use-debounce";
 
@@ -97,28 +98,44 @@ function StudentClassData(props) {
           <tr>
             <th>
               Class Title
-              <button type="button" onClick={sortByClassName}>
-                ^
+              <button
+                type="button"
+                onClick={sortByClassName}
+                className="sortButtonClassTitle"
+              >
+                <BsArrowUpDown />
               </button>
             </th>
             <th>Class Id</th>
             <th>
               Facilitator
-              <button type="button" onClick={sortByClassFacilitator}>
-                ^
+              <button
+                type="button"
+                onClick={sortByClassFacilitator}
+                className="sortButton"
+              >
+                <BsArrowUpDown />
               </button>
             </th>
             <th>Language</th>
             <th>
               Class Date
-              <button type="button" onClick={sortByClassDate}>
-                ^
+              <button
+                type="button"
+                onClick={sortByClassDate}
+                className="sortButtonClassDate"
+              >
+                <BsArrowUpDown />
               </button>
             </th>
             <th>
               Class Rating
-              <button type="button" onClick={sortByClassRating}>
-                ^
+              <button
+                type="button"
+                onClick={sortByClassRating}
+                className="sortButtonClassRating"
+              >
+                <BsArrowUpDown />
               </button>
             </th>
           </tr>

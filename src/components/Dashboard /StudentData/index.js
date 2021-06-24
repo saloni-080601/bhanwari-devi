@@ -6,6 +6,7 @@ import { useDebounce } from "use-debounce";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import "./styles.scss";
+import { BsArrowUpDown } from "react-icons/bs";
 
 const getPartnerIdFromUrl = () => {
   let partnerId;
@@ -19,7 +20,13 @@ function StudentData() {
   const [message, setMessage] = useState("");
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [ascendingByStudentName, setAscendingByStudentName] = useState(true);
+  const [ascendingByDate, setAscendingByDate] = useState(true);
+  const [ascendingByTotalClass, setAscendingByTotalClass] = useState(true);
+  const [ascendingByRating, setAscendingByRating] = useState(true);
   const [ascendingAlphabetically, setAscendingAlphabetically] = useState(true);
+  const [ascendingNumerically, setAscendingNumerically] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [debouncedText] = useDebounce(searchTerm);
   const user = useSelector(({ User }) => User);
 
@@ -68,8 +75,115 @@ function StudentData() {
     }
   });
 
+  // console.log("Students", Students);
+
+  const studentData = (item, getStars, totalStarts) => {
+    return (
+      <tr key={item.id}>
+        <td data-column="Name">
+          <Link
+            className="t-data"
+            to={{
+              pathname: "/student",
+              state: {
+                pass: item.classes_registered,
+                passName: item.name,
+              },
+            }}
+          >
+            {item.name}
+          </Link>
+        </td>
+        <td data-column="Enrolled On">{item.created_at}</td>
+        <td data-column="Total classes "> {item.classes_registered.length}</td>
+        <td data-column="Last class title">
+          {item.classes_registered &&
+          item.classes_registered.length > 0 &&
+          item.classes_registered[item.classes_registered.length - 1][
+            "title"
+          ] != ""
+            ? item.classes_registered[item.classes_registered.length - 1][
+                "title"
+              ]
+            : "NA"}
+        </td>
+        <td data-column="Last class date">
+          {item.classes_registered &&
+          item.classes_registered.length > 0 &&
+          item.classes_registered[item.classes_registered.length - 1][
+            "start_time"
+          ]
+            ? item.classes_registered[item.classes_registered.length - 1][
+                "start_time"
+              ]
+            : "NA"}
+        </td>
+        <td data-column="Last class time">
+          {item.classes_registered &&
+          item.classes_registered.length > 0 &&
+          item.classes_registered[item.classes_registered.length - 1][
+            "end_time"
+          ]
+            ? item.classes_registered[item.classes_registered.length - 1][
+                "end_time"
+              ]
+            : "NA"}
+        </td>
+        <td data-column="Avg Class Rating ">
+          {[1, 2, 3, 4, 5].map((star) => {
+            return Math.ceil(getStars / totalStarts) > 0 &&
+              star <= Math.ceil(getStars / totalStarts) ? (
+              <span className="fa fa-star" style={{ color: "#D55F31" }}></span>
+            ) : (
+              <span className="fa fa-star" style={{ color: "gray" }}></span>
+            );
+          })}
+        </td>
+      </tr>
+    );
+  };
+
+  const avgRating = () => {
+    // Students
+    // .slice(0, 10)
+    Students.map((item) => {
+      let getStars = 0;
+      let totalStarts = item.classes_registered.length * 5;
+      item.classes_registered.map((stars) => {
+        getStars = getStars + Number(stars.feedback.feedback);
+      });
+      // return studentData(item, getStars, totalStarts);
+      return { ...item, avg: Math.ceil(getStars / totalStarts) };
+    });
+
+    // return Math.ceil(getStars / totalStarts)
+    return Students;
+  };
+
+  // console.log("avgRating", avgRating());
+
   const sortByStudentsName = () => {
-    setAscendingAlphabetically(!ascendingAlphabetically);
+    setAscendingByStudentName(!ascendingByStudentName);
+    setAscendingAlphabetically(true);
+    setLoading(true);
+  };
+
+  const sortByDate = () => {
+    setAscendingByDate(!ascendingByDate);
+    setAscendingAlphabetically(false);
+    setLoading(true);
+  };
+
+  const sortByTotalClass = () => {
+    setAscendingByTotalClass(!ascendingByTotalClass);
+    setAscendingNumerically(true);
+    setLoading(false);
+  };
+
+  const sortByRating = () => {
+    setAscendingByRating(!ascendingByRating);
+    setAscendingNumerically(false);
+    setLoading(false);
   };
 
   return (
@@ -89,194 +203,169 @@ function StudentData() {
           <tr>
             <th>
               Students Name
-              <button type="button" onClick={sortByStudentsName}>
-                ^
+              <button
+                type="button"
+                onClick={sortByStudentsName}
+                className="sortButtonName"
+              >
+                <BsArrowUpDown />
               </button>
             </th>
-            <th>Enroll date </th>
-            <th>Total Classes Attended</th>
+            <th>
+              Enroll date
+              <button
+                type="button"
+                onClick={sortByDate}
+                className="sortButtonN"
+              >
+                <BsArrowUpDown />
+              </button>
+            </th>
+            <th>
+              Total Classes Attended
+              <button
+                type="button"
+                onClick={sortByTotalClass}
+                className="sortButtonN"
+              >
+                <BsArrowUpDown />
+              </button>
+            </th>
             <th>Last Class Title</th>
             <th>Last Class Date </th>
             <th>Last Class Time</th>
-            <th>Avg Class Rating</th>
+            <th>
+              Avg Class Rating
+              <button
+                type="button"
+                onClick={sortByRating}
+                className="sortButtonN"
+              >
+                <BsArrowUpDown />
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {ascendingAlphabetically
-            ? Students.slice(0)
-                .sort(function (a, b) {
-                  var nameA = a.name.toLowerCase();
-                  var nameB = b.name.toLowerCase();
-                  return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-                })
-                // .slice(0, 10)
-                .map((item) => {
-                  let getStars = 0;
-                  let totalStarts = item.classes_registered.length * 5;
-                  item.classes_registered.map((stars) => {
-                    getStars = getStars + Number(stars.feedback.feedback);
-                  });
-                  return (
-                    <tr key={item.id}>
-                      <td data-column="Name">
-                        <Link
-                          className="t-data"
-                          to={{
-                            pathname: "/student",
-                            state: {
-                              pass: item.classes_registered,
-                              passName: item.name,
-                            },
-                          }}
-                        >
-                          {item.name}
-                        </Link>
-                      </td>
-                      <td data-column="Enrolled On">{item.created_at}</td>
-                      <td data-column="Total classes ">
-                        {" "}
-                        {item.classes_registered.length}
-                      </td>
-                      <td data-column="Last class title">
-                        {item.classes_registered &&
-                        item.classes_registered.length > 0 &&
-                        item.classes_registered[
-                          item.classes_registered.length - 1
-                        ]["title"] != ""
-                          ? item.classes_registered[
-                              item.classes_registered.length - 1
-                            ]["title"]
-                          : "NA"}
-                      </td>
-                      <td data-column="Last class date">
-                        {item.classes_registered &&
-                        item.classes_registered.length > 0 &&
-                        item.classes_registered[
-                          item.classes_registered.length - 1
-                        ]["start_time"]
-                          ? item.classes_registered[
-                              item.classes_registered.length - 1
-                            ]["start_time"]
-                          : "NA"}
-                      </td>
-                      <td data-column="Last class time">
-                        {item.classes_registered &&
-                        item.classes_registered.length > 0 &&
-                        item.classes_registered[
-                          item.classes_registered.length - 1
-                        ]["end_time"]
-                          ? item.classes_registered[
-                              item.classes_registered.length - 1
-                            ]["end_time"]
-                          : "NA"}
-                      </td>
-                      <td data-column="Avg Class Rating ">
-                        {[1, 2, 3, 4, 5].map((star) => {
-                          return Math.ceil(getStars / totalStarts) > 0 &&
-                            star <= Math.ceil(getStars / totalStarts) ? (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "#D55F31" }}
-                            ></span>
-                          ) : (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "gray" }}
-                            ></span>
-                          );
-                        })}
-                      </td>
-                    </tr>
-                  );
-                })
-            : Students.slice(0)
-                .sort(function (a, b) {
-                  var nameA = a.name.toLowerCase();
-                  var nameB = b.name.toLowerCase();
-                  return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-                })
-                .reverse()
-                // .slice(0, 10)
-                .map((item) => {
-                  let getStars = 0;
-                  let totalStarts = item.classes_registered.length * 5;
-                  item.classes_registered.map((stars) => {
-                    getStars = getStars + Number(stars.feedback.feedback);
-                  });
-                  return (
-                    <tr key={item.id}>
-                      <td data-column="Name">
-                        <Link
-                          className="t-data"
-                          to={{
-                            pathname: "/student",
-                            state: {
-                              pass: item.classes_registered,
-                              passName: item.name,
-                            },
-                          }}
-                        >
-                          {item.name}
-                        </Link>
-                      </td>
-                      <td data-column="Enrolled On">{item.created_at}</td>
-                      <td data-column="Total classes ">
-                        {" "}
-                        {item.classes_registered.length}
-                      </td>
-
-                      <td data-column="Last class title">
-                        {item.classes_registered &&
-                        item.classes_registered.length > 0 &&
-                        item.classes_registered[
-                          item.classes_registered.length - 1
-                        ]["title"] != ""
-                          ? item.classes_registered[
-                              item.classes_registered.length - 1
-                            ]["title"]
-                          : "NA"}
-                      </td>
-                      <td data-column="Last class date">
-                        {item.classes_registered &&
-                        item.classes_registered.length > 0 &&
-                        item.classes_registered[
-                          item.classes_registered.length - 1
-                        ]["start_time"]
-                          ? item.classes_registered[
-                              item.classes_registered.length - 1
-                            ]["start_time"]
-                          : "NA"}
-                      </td>
-                      <td data-column="Last class time">
-                        {item.classes_registered &&
-                        item.classes_registered.length > 0 &&
-                        item.classes_registered[
-                          item.classes_registered.length - 1
-                        ]["end_time"]
-                          ? item.classes_registered[
-                              item.classes_registered.length - 1
-                            ]["end_time"]
-                          : "NA"}
-                      </td>
-                      <td data-column="Avg Class Rating ">
-                        {[1, 2, 3, 4, 5].map((star) => {
-                          return Math.ceil(getStars / totalStarts) > 0 &&
-                            star <= Math.ceil(getStars / totalStarts) ? (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "#D55F31" }}
-                            ></span>
-                          ) : (
-                            <span
-                              className="fa fa-star"
-                              style={{ color: "gray" }}
-                            ></span>
-                          );
-                        })}
-                      </td>
-                    </tr>
-                  );
-                })}
+          {
+            loading
+              ? ascendingAlphabetically
+                ? ascendingByStudentName
+                  ? Students.slice(0)
+                      .sort(function (a, b) {
+                        var nameA = a.name.toLowerCase();
+                        var nameB = b.name.toLowerCase();
+                        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+                      })
+                      // .slice(0, 10)
+                      .map((item) => {
+                        // console.log("item", item);
+                        let getStars = 0;
+                        let totalStarts = item.classes_registered.length * 5;
+                        item.classes_registered.map((stars) => {
+                          getStars = getStars + Number(stars.feedback.feedback);
+                        });
+                        return studentData(item, getStars, totalStarts);
+                      })
+                  : Students.slice(0)
+                      .sort(function (a, b) {
+                        var nameA = a.name.toLowerCase();
+                        var nameB = b.name.toLowerCase();
+                        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+                      })
+                      .reverse()
+                      // .slice(0, 10)
+                      .map((item) => {
+                        let getStars = 0;
+                        let totalStarts = item.classes_registered.length * 5;
+                        item.classes_registered.map((stars) => {
+                          getStars = getStars + Number(stars.feedback.feedback);
+                        });
+                        return studentData(item, getStars, totalStarts);
+                      })
+                : ascendingByDate
+                ? Students.slice(0)
+                    .sort(function (a, b) {
+                      const dateA = new Date(a.created_at);
+                      const dateB = new Date(b.created_at);
+                      return dateB - dateA;
+                    })
+                    // .slice(0, 10)
+                    .map((item) => {
+                      let getStars = 0;
+                      let totalStarts = item.classes_registered.length * 5;
+                      item.classes_registered.map((stars) => {
+                        getStars = getStars + Number(stars.feedback.feedback);
+                      });
+                      return studentData(item, getStars, totalStarts);
+                    })
+                : Students.slice(0)
+                    .sort(function (a, b) {
+                      const dateA = new Date(a.created_at);
+                      const dateB = new Date(b.created_at);
+                      return dateB - dateA;
+                    })
+                    .reverse()
+                    // .slice(0, 10)
+                    .map((item) => {
+                      let getStars = 0;
+                      let totalStarts = item.classes_registered.length * 5;
+                      item.classes_registered.map((stars) => {
+                        getStars = getStars + Number(stars.feedback.feedback);
+                      });
+                      return studentData(item, getStars, totalStarts);
+                    })
+              : ascendingNumerically
+              ? ascendingByTotalClass
+                ? Students.slice(0)
+                    .sort(function (a, b) {
+                      var numberA = a.classes_registered.length;
+                      var numberB = b.classes_registered.length;
+                      return numberB - numberA;
+                    })
+                    // .slice(0, 10)
+                    .map((item) => {
+                      let getStars = 0;
+                      let totalStarts = item.classes_registered.length * 5;
+                      item.classes_registered.map((stars) => {
+                        getStars = getStars + Number(stars.feedback.feedback);
+                      });
+                      return studentData(item, getStars, totalStarts);
+                    })
+                : Students.slice(0)
+                    .sort(function (a, b) {
+                      var numberA = a.classes_registered.length;
+                      var numberB = b.classes_registered.length;
+                      return numberA - numberB;
+                    })
+                    // .reverse()
+                    // .slice(0, 10)
+                    .map((item) => {
+                      let getStars = 0;
+                      let totalStarts = item.classes_registered.length * 5;
+                      item.classes_registered.map((stars) => {
+                        getStars = getStars + Number(stars.feedback.feedback);
+                      });
+                      return studentData(item, getStars, totalStarts);
+                    })
+              : ascendingByRating
+              ? avgRating()
+              : // .sort(function (a, b) {
+                //   // console.log("a", a);
+                // })
+                // .map((item) => {
+                //   // console.log("item", item);
+                //   // return studentData(item, getStars, totalStarts);
+                // })
+                avgRating()
+            // .sort(function (a, b) {
+            //   // console.log("a", a);
+            // })
+            // .map((item) => {
+            //   // console.log("item", item);
+            //   // return studentData(item, getStars, totalStarts);
+            // })
+          }
           {message ? <h1>{message}</h1> : null}
         </tbody>
       </table>
