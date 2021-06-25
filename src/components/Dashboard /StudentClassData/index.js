@@ -30,7 +30,7 @@ function StudentClassData(props) {
     }
   });
 
-  const tableData = (item) => {
+  const studentClassData = (item) => {
     return (
       <tr key={item.id}>
         <td data-column="Title">{item.title}</td>
@@ -112,7 +112,7 @@ function StudentClassData(props) {
               <button
                 type="button"
                 onClick={sortByClassFacilitator}
-                className="sortButton"
+                className="sortFacilitator"
               >
                 <BsArrowUpDown />
               </button>
@@ -123,7 +123,7 @@ function StudentClassData(props) {
               <button
                 type="button"
                 onClick={sortByClassDate}
-                className="sortButtonClassDate"
+                className="sortButton"
               >
                 <BsArrowUpDown />
               </button>
@@ -133,7 +133,7 @@ function StudentClassData(props) {
               <button
                 type="button"
                 onClick={sortByClassRating}
-                className="sortButtonClassRating"
+                className="sortButton"
               >
                 <BsArrowUpDown />
               </button>
@@ -154,7 +154,7 @@ function StudentClassData(props) {
                     })
                     // .slice(0, 10)
                     .map((item) => {
-                      return tableData(item);
+                      return studentClassData(item);
                     })
                 ) : (
                   totalClass
@@ -167,7 +167,7 @@ function StudentClassData(props) {
                     .reverse()
                     // .slice(0, 10)
                     .map((item) => {
-                      return tableData(item);
+                      return studentClassData(item);
                     })
                 )
               ) : ascendingByFacilitator ? (
@@ -180,7 +180,7 @@ function StudentClassData(props) {
                   })
                   // .slice(0, 10)
                   .map((item) => {
-                    return tableData(item);
+                    return studentClassData(item);
                   })
               ) : (
                 totalClass
@@ -193,7 +193,7 @@ function StudentClassData(props) {
                   .reverse()
                   // .slice(0, 10)
                   .map((item) => {
-                    return tableData(item);
+                    return studentClassData(item);
                   })
               )
             ) : asceDescByNumber ? (
@@ -205,7 +205,7 @@ function StudentClassData(props) {
                   })
                   // .slice(0, 10)
                   .map((item) => {
-                    return tableData(item);
+                    return studentClassData(item);
                   })
               ) : (
                 totalClass
@@ -213,10 +213,9 @@ function StudentClassData(props) {
                   .sort(function (a, b) {
                     return b.feedback.feedback - a.feedback.feedback;
                   })
-                  // .reverse()
                   // .slice(0, 10)
                   .map((item) => {
-                    return tableData(item);
+                    return studentClassData(item);
                   })
               )
             ) : ascendingByClassDate ? (
@@ -229,7 +228,7 @@ function StudentClassData(props) {
                 })
                 // .slice(0, 10)
                 .map((item) => {
-                  return tableData(item);
+                  return studentClassData(item);
                 })
             ) : (
               totalClass
@@ -242,7 +241,7 @@ function StudentClassData(props) {
                 .reverse()
                 // .slice(0, 10)
                 .map((item) => {
-                  return tableData(item);
+                  return studentClassData(item);
                 })
             )
           ) : (

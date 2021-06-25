@@ -75,9 +75,20 @@ function StudentData() {
     }
   });
 
-  // console.log("Students", Students);
+  const studentList = Students.map((item) => {
+    let getStars = 0;
+    let totalStarts = item.classes_registered.length * 5;
+    item.classes_registered.map((stars) => {
+      getStars = getStars + Number(stars.feedback.feedback);
+    });
+    item.avgClassRating = Math.ceil(getStars / totalStarts);
+    if (isNaN(item.avgClassRating)) {
+      item.avgClassRating = 0;
+    }
+    return item;
+  });
 
-  const studentData = (item, getStars, totalStarts) => {
+  const studentData = (item) => {
     return (
       <tr key={item.id}>
         <td data-column="Name">
@@ -131,8 +142,7 @@ function StudentData() {
         </td>
         <td data-column="Avg Class Rating ">
           {[1, 2, 3, 4, 5].map((star) => {
-            return Math.ceil(getStars / totalStarts) > 0 &&
-              star <= Math.ceil(getStars / totalStarts) ? (
+            return item.avgClassRating > 0 && star <= item.avgClassRating ? (
               <span className="fa fa-star" style={{ color: "#D55F31" }}></span>
             ) : (
               <span className="fa fa-star" style={{ color: "gray" }}></span>
@@ -142,25 +152,6 @@ function StudentData() {
       </tr>
     );
   };
-
-  const avgRating = () => {
-    // Students
-    // .slice(0, 10)
-    Students.map((item) => {
-      let getStars = 0;
-      let totalStarts = item.classes_registered.length * 5;
-      item.classes_registered.map((stars) => {
-        getStars = getStars + Number(stars.feedback.feedback);
-      });
-      // return studentData(item, getStars, totalStarts);
-      return { ...item, avg: Math.ceil(getStars / totalStarts) };
-    });
-
-    // return Math.ceil(getStars / totalStarts)
-    return Students;
-  };
-
-  // console.log("avgRating", avgRating());
 
   const sortByStudentsName = () => {
     setAscendingByStudentName(!ascendingByStudentName);
@@ -206,18 +197,14 @@ function StudentData() {
               <button
                 type="button"
                 onClick={sortByStudentsName}
-                className="sortButtonName"
+                className="sortName"
               >
                 <BsArrowUpDown />
               </button>
             </th>
             <th>
               Enroll date
-              <button
-                type="button"
-                onClick={sortByDate}
-                className="sortButtonN"
-              >
+              <button type="button" onClick={sortByDate} className="sortNumber">
                 <BsArrowUpDown />
               </button>
             </th>
@@ -226,7 +213,7 @@ function StudentData() {
               <button
                 type="button"
                 onClick={sortByTotalClass}
-                className="sortButtonN"
+                className="sortNumber"
               >
                 <BsArrowUpDown />
               </button>
@@ -239,7 +226,7 @@ function StudentData() {
               <button
                 type="button"
                 onClick={sortByRating}
-                className="sortButtonN"
+                className="sortNumber"
               >
                 <BsArrowUpDown />
               </button>
@@ -247,125 +234,89 @@ function StudentData() {
           </tr>
         </thead>
         <tbody>
-          {
-            loading
-              ? ascendingAlphabetically
-                ? ascendingByStudentName
-                  ? Students.slice(0)
-                      .sort(function (a, b) {
-                        var nameA = a.name.toLowerCase();
-                        var nameB = b.name.toLowerCase();
-                        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-                      })
-                      // .slice(0, 10)
-                      .map((item) => {
-                        // console.log("item", item);
-                        let getStars = 0;
-                        let totalStarts = item.classes_registered.length * 5;
-                        item.classes_registered.map((stars) => {
-                          getStars = getStars + Number(stars.feedback.feedback);
-                        });
-                        return studentData(item, getStars, totalStarts);
-                      })
-                  : Students.slice(0)
-                      .sort(function (a, b) {
-                        var nameA = a.name.toLowerCase();
-                        var nameB = b.name.toLowerCase();
-                        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-                      })
-                      .reverse()
-                      // .slice(0, 10)
-                      .map((item) => {
-                        let getStars = 0;
-                        let totalStarts = item.classes_registered.length * 5;
-                        item.classes_registered.map((stars) => {
-                          getStars = getStars + Number(stars.feedback.feedback);
-                        });
-                        return studentData(item, getStars, totalStarts);
-                      })
-                : ascendingByDate
-                ? Students.slice(0)
+          {loading
+            ? ascendingAlphabetically
+              ? ascendingByStudentName
+                ? studentList
+                    .slice(0)
                     .sort(function (a, b) {
-                      const dateA = new Date(a.created_at);
-                      const dateB = new Date(b.created_at);
-                      return dateB - dateA;
+                      var nameA = a.name.toLowerCase();
+                      var nameB = b.name.toLowerCase();
+                      return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
                     })
-                    // .slice(0, 10)
                     .map((item) => {
-                      let getStars = 0;
-                      let totalStarts = item.classes_registered.length * 5;
-                      item.classes_registered.map((stars) => {
-                        getStars = getStars + Number(stars.feedback.feedback);
-                      });
-                      return studentData(item, getStars, totalStarts);
+                      return studentData(item);
                     })
-                : Students.slice(0)
+                : studentList
+                    .slice(0)
                     .sort(function (a, b) {
-                      const dateA = new Date(a.created_at);
-                      const dateB = new Date(b.created_at);
-                      return dateB - dateA;
+                      var nameA = a.name.toLowerCase();
+                      var nameB = b.name.toLowerCase();
+                      return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
                     })
                     .reverse()
-                    // .slice(0, 10)
                     .map((item) => {
-                      let getStars = 0;
-                      let totalStarts = item.classes_registered.length * 5;
-                      item.classes_registered.map((stars) => {
-                        getStars = getStars + Number(stars.feedback.feedback);
-                      });
-                      return studentData(item, getStars, totalStarts);
+                      return studentData(item);
                     })
-              : ascendingNumerically
-              ? ascendingByTotalClass
-                ? Students.slice(0)
-                    .sort(function (a, b) {
-                      var numberA = a.classes_registered.length;
-                      var numberB = b.classes_registered.length;
-                      return numberB - numberA;
-                    })
-                    // .slice(0, 10)
-                    .map((item) => {
-                      let getStars = 0;
-                      let totalStarts = item.classes_registered.length * 5;
-                      item.classes_registered.map((stars) => {
-                        getStars = getStars + Number(stars.feedback.feedback);
-                      });
-                      return studentData(item, getStars, totalStarts);
-                    })
-                : Students.slice(0)
-                    .sort(function (a, b) {
-                      var numberA = a.classes_registered.length;
-                      var numberB = b.classes_registered.length;
-                      return numberA - numberB;
-                    })
-                    // .reverse()
-                    // .slice(0, 10)
-                    .map((item) => {
-                      let getStars = 0;
-                      let totalStarts = item.classes_registered.length * 5;
-                      item.classes_registered.map((stars) => {
-                        getStars = getStars + Number(stars.feedback.feedback);
-                      });
-                      return studentData(item, getStars, totalStarts);
-                    })
-              : ascendingByRating
-              ? avgRating()
-              : // .sort(function (a, b) {
-                //   // console.log("a", a);
-                // })
-                // .map((item) => {
-                //   // console.log("item", item);
-                //   // return studentData(item, getStars, totalStarts);
-                // })
-                avgRating()
-            // .sort(function (a, b) {
-            //   // console.log("a", a);
-            // })
-            // .map((item) => {
-            //   // console.log("item", item);
-            //   // return studentData(item, getStars, totalStarts);
-            // })
-          }
+              : ascendingByDate
+              ? studentList
+                  .slice(0)
+                  .sort(function (a, b) {
+                    const dateA = new Date(a.created_at);
+                    const dateB = new Date(b.created_at);
+                    return dateB - dateA;
+                  })
+                  .map((item) => {
+                    return studentData(item);
+                  })
+              : studentList
+                  .slice(0)
+                  .sort(function (a, b) {
+                    const dateA = new Date(a.created_at);
+                    const dateB = new Date(b.created_at);
+                    return dateB - dateA;
+                  })
+                  .reverse()
+                  .map((item) => {
+                    return studentData(item);
+                  })
+            : ascendingNumerically
+            ? ascendingByTotalClass
+              ? studentList
+                  .slice(0)
+                  .sort(function (a, b) {
+                    var numberA = a.classes_registered.length;
+                    var numberB = b.classes_registered.length;
+                    return numberB - numberA;
+                  })
+                  .map((item) => {
+                    return studentData(item);
+                  })
+              : studentList
+                  .slice(0)
+                  .sort(function (a, b) {
+                    var numberA = a.classes_registered.length;
+                    var numberB = b.classes_registered.length;
+                    return numberA - numberB;
+                  })
+                  .map((item) => {
+                    return studentData(item);
+                  })
+            : ascendingByRating
+            ? studentList
+                .sort(function (a, b) {
+                  return b.avgClassRating - a.avgClassRating;
+                })
+                .map((item) => {
+                  return studentData(item);
+                })
+            : studentList
+                .sort(function (a, b) {
+                  return a.avgClassRating - b.avgClassRating;
+                })
+                .map((item) => {
+                  return studentData(item);
+                })}
           {message ? <h1>{message}</h1> : null}
         </tbody>
       </table>

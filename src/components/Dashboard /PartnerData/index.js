@@ -7,6 +7,7 @@ import { useDebounce } from "use-debounce";
 import { PATHS } from "../../../constant";
 import { useSelector } from "react-redux";
 import { BsArrowUpDown } from "react-icons/bs";
+// import { Sort } from "@material-ui/icons";
 
 function PartnerDashboard() {
   const [pageNumber, setPageNumber] = useState(0); //current page
@@ -23,21 +24,30 @@ function PartnerDashboard() {
   const user = useSelector(({ User }) => User);
 
   useEffect(() => {
-    axios
-      .get(
-        // `http://dev-api.navgurukul.org/apiDocs/partners?limit=${100}&page=${
-        //   pageNumber + 1
-        // }`,
-        `https://api.merakilearn.org/partners`,
-        {
+    if (searchTerm.length > 0) {
+      axios
+        .get(`https://api.merakilearn.org/partners?name=${searchTerm}`, {
           headers: { Authorization: user.data.token },
-        }
-      )
-      .then((res) => {
-        // console.log(res, "give me 10 data");
-        setPartners(res.data);
-      });
-  }, [pageNumber]);
+        })
+        .then((res) => {
+          setPartners(res.data);
+        });
+    } else {
+      axios
+        .get(
+          `https://api.merakilearn.org/partners?limit=${10}&page=${
+            pageNumber + 1
+          }`,
+          {
+            headers: { Authorization: user.data.token },
+          }
+        )
+        .then((res) => {
+          // console.log(res, "give me 10 data");
+          setPartners(res.data);
+        });
+    }
+  }, [searchTerm, pageNumber]);
 
   const Partners = partners.filter((searchValue) => {
     if (searchTerm == "") {
@@ -63,8 +73,6 @@ function PartnerDashboard() {
     );
   };
 
-  // const number = 0;
-
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
@@ -78,20 +86,6 @@ function PartnerDashboard() {
     setAscendingPartnerStudentsNumber(!ascendingPartnerStudentsNumber);
     setAsscendingAlphabetically(false);
   };
-
-  // const pagecount = (page, limit = 10) => {
-  //   console.log(page,'page')
-
-  //   axios
-  //     .get(`http://dev-api.navgurukul.org/apiDocs/partners?limit=${limit}&page=${page}`, {
-  //       headers: { Authorization: user.data.token },
-  //     })
-  //     .then((res) => {
-  //       console.log(res, 'llllll=====')
-  //       setPartners(res.data);
-  //     });
-
-  // }
 
   return (
     <>
@@ -120,18 +114,6 @@ function PartnerDashboard() {
               nextLinkClassName={"nextBttn"}
               disabledClassName={"paginationDisabled"}
               activeClassName={"paginationActive"}
-              // pageLabelBuilder={(page) => page + 5 * number}
-              // pageRangeDisplayed={5}
-              // pageCount={5}
-
-              // onClick={(num)=>{
-              //   console.log(num,'num')
-              // }}
-              // eventListener={'onClick'}
-              // onPageActive={(number) => {
-              //   console.log(number, 'number--')
-              //   // pagecount( number.selected+1)
-              // }}
             />
           </div>
         </div>
@@ -153,7 +135,7 @@ function PartnerDashboard() {
                 <button
                   type="button"
                   onClick={sortByNumber}
-                  className="sortButton"
+                  className="sortNumberButton"
                 >
                   <BsArrowUpDown />
                 </button>
