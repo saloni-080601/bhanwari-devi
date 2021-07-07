@@ -86,7 +86,7 @@ function ExerciseContent(props) {
   }
 
   return (
-    <div className="ng-exercise-content">
+    <div className="ng-exercise-content" align="left">
       {content.map((contentItem, index) => (
         <RenderContent data={contentItem} key={index} />
       ))}
