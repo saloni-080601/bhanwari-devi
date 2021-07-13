@@ -109,6 +109,7 @@ function Class({ classToEdit }) {
         Authorization: user.data.token,
       },
     }).then((res) => {
+      console.log("pathway", res.data);
       setAllCourse(res.data.pathways);
     });
   }, []);

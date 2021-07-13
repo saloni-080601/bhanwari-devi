@@ -29,7 +29,7 @@ const RenderContent = ({ data }) => {
     return (
       <table className="table-content">
         <thead>
-          <tr>
+          <tr align="center">
             {columns.map((col) => {
               return <th>{col}</th>;
             })}
@@ -50,12 +50,24 @@ const RenderContent = ({ data }) => {
     );
   }
   if (data.type === "markdown") {
+    const value = data.value.split(">");
     return (
-      <ReactMarkdown
-        source={data.value}
-        escapeHtml={false}
-        astPlugins={[parseHtml]}
-      />
+      <>
+        <ReactMarkdown
+          source={value[0]}
+          escapeHtml={false}
+          astPlugins={[parseHtml]}
+        />
+        {value.length === 2 && (
+          <div className="verticalLine">
+            <ReactMarkdown
+              source={value[1]}
+              escapeHtml={false}
+              astPlugins={[parseHtml]}
+            />
+          </div>
+        )}
+      </>
     );
   }
   if (data.type === "python" || "javascript") {
@@ -86,7 +98,7 @@ function ExerciseContent(props) {
   }
 
   return (
-    <div className="ng-exercise-content" align="left">
+    <div className="ng-exercise-content" align="justify">
       {content.map((contentItem, index) => (
         <RenderContent data={contentItem} key={index} />
       ))}

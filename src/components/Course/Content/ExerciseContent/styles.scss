@@ -58,8 +58,19 @@
 
   .table-content {
     border-collapse: collapse;
-    font-size: 5%;
-    // color: #ffffff;
-    // background-color: #383a42;
+    // font-size: 95%;
+  }
+
+  .table-content td {
+    font-size: 93%;
+  }
+
+  .verticalLine {
+    border-left: 4px solid #868588;
+    margin-bottom: 3%;
+    padding-left: 5%;
+    padding-right: 2%;
+    color: #69686b;
+    background-color: #f3f3f5;
   }
 }
