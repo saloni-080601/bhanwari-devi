@@ -18,6 +18,8 @@ const EditOnGithub = (props) => {
 const Exercise = (props) => {
   const { selectedExercise } = props;
 
+  console.log("selectedExercise", selectedExercise);
+
   return (
     <div>
       <h2>{get(selectedExercise, "exercise.name")}</h2>

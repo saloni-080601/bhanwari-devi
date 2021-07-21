@@ -15,8 +15,11 @@ function ExerciseList(props) {
     selectedExercise,
   } = useSelector(({ Course }) => Course);
 
+  console.log("data", data);
+
   const handleExerciseChange = useCallback(
-    (clickedExerciseInfo) => {
+    (clickedExerciseInfo, e) => {
+      // e.stopPropagation();
       const { index, subExerciseIndex } = clickedExerciseInfo;
       const mainExercise = get(data, `exerciseList[${index}]`);
       // if child exercise was clicked, also handling fir
@@ -38,20 +41,47 @@ function ExerciseList(props) {
     [data, dispatch]
   );
 
+  const childExerciseList = list.filter(
+    (exercise) => exercise.parent_exercise_id === "3142"
+  );
+  const parentExerciseList = list.filter(
+    (exercise) => !(exercise.parent_exercise_id === "3142")
+  );
+  parentExerciseList.push({ name: "Exercise" });
+  parentExerciseList[parentExerciseList.length - 1]["childExercises"] =
+    childExerciseList;
+
+  console.log("parentExerciseList", parentExerciseList);
+
   return (
     <div className="ng-exercise-list">
-      {/* <div className='enroll'>
-        ENROLL IN COURSE
-      </div> */}
-      {list.map((exercise, index) => {
+      {parentExerciseList.map((exercise, index) => {
         return (
-          <Exercise
-            exercise={exercise}
-            index={index}
-            selectedExercise={selectedExercise}
-            onClick={handleExerciseChange}
-            key={index}
-          />
+          <div>
+            {exercise.childExercises !== null ? (
+              exercise.childExercises.map((exercise, index) => {
+                console.log("exercise", exercise);
+                return (
+                  <Exercise
+                    exercise={exercise}
+                    index={index}
+                    selectedExercise={selectedExercise}
+                    onClick={handleExerciseChange}
+                    // key={index}
+                    key={`child_${index}`}
+                  />
+                );
+              })
+            ) : (
+              <Exercise
+                exercise={exercise}
+                index={index}
+                selectedExercise={selectedExercise}
+                onClick={handleExerciseChange}
+                key={index}
+              />
+            )}
+          </div>
         );
       })}
     </div>
@@ -63,3 +93,16 @@ ExerciseList.propTypes = {
 };
 
 export default ExerciseList;
+
+// exercise.childExercises !== null ? (
+//   exercise.childExercises.map((exercise, index) => {
+//     console.log("exercise", exercise);
+//     return (
+//         <Exercise
+//           exercise={exercise}
+//           index={index}
+//           selectedExercise={selectedExercise}
+//           onClick={handleExerciseChange}
+//           key={index}
+//         />
+//       </div>

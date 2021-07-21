@@ -63,6 +63,7 @@ export const mapCourseContent = (contentResponse) => {
           id: childExercise.id,
           name: childExercise.name,
           slug: childExercise.slug,
+          parent_exercise_id: childExercise.parent_exercise_id,
         };
       });
     }
@@ -76,6 +77,7 @@ export const mapCourseContent = (contentResponse) => {
       name: exercise.name,
       slug: exercise.slug,
       childExercises: childExercises,
+      parent_exercise_id: exercise.parent_exercise_id,
     };
   });
 
