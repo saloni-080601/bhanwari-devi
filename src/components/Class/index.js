@@ -369,8 +369,8 @@ function Class({ classToEdit }) {
                 className="create-class-select"
                 name={PATHWAY_ID}
                 value={formFieldsState[PATHWAY_ID]}
-                required
-                aria-required
+                // required
+                // aria-required
                 onChange={(e) => {
                   setFormField(e.target.value, PATHWAY_ID);
                 }}

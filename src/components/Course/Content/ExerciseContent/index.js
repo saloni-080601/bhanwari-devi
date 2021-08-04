@@ -130,6 +130,8 @@ const RenderContent = ({ data }) => {
 function ExerciseContent(props) {
   const { content = [] } = props;
 
+  console.log(content);
+
   if (!content) {
     return "";
   }

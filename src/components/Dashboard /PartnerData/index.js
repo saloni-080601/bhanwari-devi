@@ -47,7 +47,7 @@ function PartnerDashboard() {
   const createMerakiLink = (id) => {
     axios({
       method: METHODS.PUT,
-      url: `${process.env.REACT_APP_MERAKI_URL}/partners/${id}/meraki-link`,
+      url: `${process.env.REACT_APP_MERAKI_URL}/partners/${id}/merakiLink`,
       headers: {
         accept: "application/json",
         Authorization: user.data.token,
