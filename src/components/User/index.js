@@ -51,7 +51,7 @@ function User() {
     });
   }, [debouncedText, pageNumber]);
 
-  const changeHandler = (e, email) => {
+  const changeHandler = async (e, email) => {
     const roomId = e.target.value;
     const notify = () => {
       const roomAlias = allClasses.filter((c) => {
