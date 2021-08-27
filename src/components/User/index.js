@@ -47,7 +47,7 @@ function User() {
       },
     }).then((res) => {
       setUsers(res.data.users);
-      setTotalCount(res.data.count);
+      setTotalCount(res.data.users.length);
     });
   }, [debouncedText, pageNumber]);
 
@@ -81,6 +81,7 @@ function User() {
       notify();
     });
   };
+
   const pageCount = Math.ceil(totalCount / limit);
   const changePage = ({ selected }) => {
     setPageNumber(selected);
@@ -140,8 +141,7 @@ function User() {
                   <td data-column="Joined">{item.created_at.split("T")[0]}</td>
                   <td data-column="Roles">{item.rolesList.join(", ")}</td>
                   <td data-column="Add to Chat">
-                    <Select
-                      // FIX THIS
+                    <select
                       className="inputField"
                       onChange={(e) => changeHandler(e, item.email)}
                       value={item.room_id}
@@ -167,7 +167,7 @@ function User() {
                           </option>
                         );
                       })}
-                    </Select>
+                    </select>
                   </td>
                 </tr>
               );
