@@ -11,6 +11,8 @@ function ClassList({ editClass, isShow }) {
 
   const { loading, data = [] } = useSelector(({ Class }) => Class.allClasses);
 
+  console.log(data, "kkkkkkkkkk");
+
   useEffect(() => {
     if (isShow === false) {
       dispatch(classActions.getClasses());

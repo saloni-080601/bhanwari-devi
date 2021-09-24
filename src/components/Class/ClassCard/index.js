@@ -9,17 +9,21 @@ import "./styles.scss";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "../../common/Modal";
+import Loader from "../../common/Loader";
 
 toast.configure();
 
 function ClassCard({ item, editClass, enroll, style }) {
   const dispatch = useDispatch();
+  const [time, setTime] = React.useState(false);
+
   const [enrollShowModal, setEnrollShowModal] = React.useState(false);
   const [unenrollShowModal, setunenrollShowModal] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
   const [editShowModal, setEditShowModal] = React.useState(false);
   const [deleteCohort, setDeleteCohort] = React.useState(false);
   const [indicator, setIndicator] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const user = useSelector(({ User }) => User);
 
   const classStartTime = item.start_time && item.start_time.replace("Z", "");
@@ -101,6 +105,16 @@ function ClassCard({ item, editClass, enroll, style }) {
   };
   // API CALL FOR enroll class
   const handleSubmit = (Id) => {
+    setTimeout(() => {
+      setTime(true);
+      // item={...item,enroll:true}
+      //  item.enrolled = false
+      // item[enroll] = true
+      // console.log( item.enrolled,'komal')
+      // time.current = false;
+      console.log("you can see me after 12 seconds");
+    }, 2000);
+    setLoading(true);
     const notify = () => {
       toast.success("You have been enrolled to class successfully", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -120,14 +134,23 @@ function ClassCard({ item, editClass, enroll, style }) {
           },
         }
       )
-      .then(() => {
+      .then((res) => {
+        console.log(res, "EnrollClass");
         notify();
+        setLoading(false);
         dispatch(classActions.enrolledClass(Id));
       });
   };
 
   // API CALL FOR DROP OUT
   const handleDropOut = (Id) => {
+    setTimeout(() => {
+      // item.enrolled = false
+      setTime(false);
+
+      console.log("you can see me after 12 seconds");
+    }, 2000);
+    setLoading(true);
     const notify = () => {
       toast.success("You have been dropped out of class successfully", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -143,11 +166,15 @@ function ClassCard({ item, editClass, enroll, style }) {
         Authorization: user.data.token,
         "unregister-all": indicator,
       },
-    }).then(() => {
+    }).then((res) => {
+      console.log(res, "DropOut");
+      setLoading(false);
       notify();
       dispatch(classActions.dropOutClass(Id));
     });
   };
+
+  console.log(time, "time");
 
   return (
     <div className="class-card ">
@@ -171,15 +198,21 @@ function ClassCard({ item, editClass, enroll, style }) {
         </p>
         <div className="bottom-details">
           {!item.enrolled ? (
-            <button
-              type="submit"
-              className={style}
-              onClick={() => {
-                handleClickOpenEnroll(item.id);
-              }}
-            >
-              {enroll}
-            </button>
+            loading ? (
+              <Loader />
+            ) : (
+              <button
+                type="submit"
+                className={style}
+                onClick={() => {
+                  handleClickOpenEnroll(item.id);
+                }}
+              >
+                {enroll}
+              </button>
+            )
+          ) : loading ? (
+            <Loader />
           ) : (
             <button
               type="submit"
