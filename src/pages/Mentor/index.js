@@ -12,6 +12,9 @@ import FloatingIcon from "../../components/common/FloatingIcon";
 import Loader from "../../components/common/Loader";
 import "./styles.scss";
 
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
+
 let PAGINATION_THRESHOLD = 200;
 
 const Mentor = () => {
@@ -53,6 +56,8 @@ const Mentor = () => {
 
     client.sendEvent(roomId, "m.room.message", messageObj);
   };
+
+  console.log(rooms, "komal");
 
   const removeMessageEvent = (eventId) => {
     setRoomMessage((roomMessages) => {
@@ -274,27 +279,38 @@ const Mentor = () => {
   }, [selectedRoomId, accessToken]);
 
   const renderRooms = () => {
+    console.log(rooms, "rooms");
     return (
       !(isMobile && selectedRoomId) && (
         <nav role="navigation">
           <ul className="rooms-navs-container">
             {rooms.map((room) => {
               return (
-                <RoomNav
-                  key={room.roomId}
-                  roomId={room.roomId}
-                  accessToken={accessToken}
-                  isSelected={room.roomId === selectedRoomId}
-                  name={room.name}
-                  onSelect={() => {
-                    setSelectedRoomId(room.roomId);
-                  }}
-                  lastMessage={
-                    roomMessages[room.roomId]
-                      ? roomMessages[room.roomId][0]
-                      : null
-                  }
-                />
+                <>
+                  <div>
+                    <NotificationBadge
+                      count="4"
+                      // count={room.notificationCounts}
+                      effect={Effect.SCALE}
+                    />
+                  </div>
+                  <RoomNav
+                    key={room.roomId}
+                    roomId={room.roomId}
+                    accessToken={accessToken}
+                    isSelected={room.roomId === selectedRoomId}
+                    name={room.name}
+                    // notificationCounts={room.notificationCounts}
+                    onSelect={() => {
+                      setSelectedRoomId(room.roomId);
+                    }}
+                    lastMessage={
+                      roomMessages[room.roomId]
+                        ? roomMessages[room.roomId][0]
+                        : null
+                    }
+                  />
+                </>
               );
             })}
           </ul>
