@@ -284,7 +284,7 @@ const Mentor = () => {
               return (
                 <>
                   <NotificationBadge
-                    count={room._notificationCounts.total} //This is the total number of masseges in each room and wee need to display unseen masseges
+                    count={room._notificationCounts.total} //This is the total number of messages in each room and wee need to display unseen messages
                     effect={Effect.SCALE}
                   />
                   <RoomNav
