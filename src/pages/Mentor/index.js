@@ -10,6 +10,8 @@ import Messages from "./Messages";
 import { MATRIX_DOMAIN, fetchMessages, redactEvent, getMembers } from "./utils";
 import FloatingIcon from "../../components/common/FloatingIcon";
 import Loader from "../../components/common/Loader";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 import "./styles.scss";
 
 let PAGINATION_THRESHOLD = 200;
@@ -278,23 +280,29 @@ const Mentor = () => {
       !(isMobile && selectedRoomId) && (
         <nav role="navigation">
           <ul className="rooms-navs-container">
-            {rooms.map((room) => {
+            {rooms.map((room, index) => {
               return (
-                <RoomNav
-                  key={room.roomId}
-                  roomId={room.roomId}
-                  accessToken={accessToken}
-                  isSelected={room.roomId === selectedRoomId}
-                  name={room.name}
-                  onSelect={() => {
-                    setSelectedRoomId(room.roomId);
-                  }}
-                  lastMessage={
-                    roomMessages[room.roomId]
-                      ? roomMessages[room.roomId][0]
-                      : null
-                  }
-                />
+                <>
+                  <NotificationBadge
+                    count={room._notificationCounts.total} //This is the total number of masseges in each room and wee need to display unseen masseges
+                    effect={Effect.SCALE}
+                  />
+                  <RoomNav
+                    key={room.roomId}
+                    roomId={room.roomId}
+                    accessToken={accessToken}
+                    isSelected={room.roomId === selectedRoomId}
+                    name={room.name}
+                    onSelect={() => {
+                      setSelectedRoomId(room.roomId);
+                    }}
+                    lastMessage={
+                      roomMessages[room.roomId]
+                        ? roomMessages[room.roomId][0]
+                        : null
+                    }
+                  />
+                </>
               );
             })}
           </ul>
