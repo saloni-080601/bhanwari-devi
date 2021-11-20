@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { BsArrowUpDown } from "react-icons/bs";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./styles.scss";
-import { Redirect } from "react-router";
+// import { Redirect } from "react-router";
 
 const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
@@ -28,27 +28,71 @@ function PartnerStudentData() {
   const [totalCount, setTotalCount] = useState();
   const [message, setMessage] = useState("");
   const [students, setStudents] = useState([]);
+  const localStorageKK = localStorage.getItem("client");
+  console.log(localStorageKK, "value");
+  const [client, setClient] = useState(localStorageKK);
   const [slicedStudents, setSlicedStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortMethod, setSortMethod] = useState("dsc");
   const [sort_class, setSortClass] = useState("sorter");
   const [filterVal, setFilterVal] = useState([0, 0]);
-  const [filteredData, setFilteredData] = useState(false);
+  // const [filteredData, setFilteredData] = useState(false);
   const [debouncedText] = useDebounce(searchTerm, 400);
   const user = useSelector(({ User }) => User);
 
+  // console.log(slicedStudents,'my data')
+
+  // console.log(client, 'komal')
+
+  // let client  = ""
+
+  // const client = useRef(true);
+
+  // let client = localStorage.getItem(client)
+
+  // useEffect (() =>{
+  //   // if (client == false){}
+  //   localStorage.setItem("client",true)
+  // },[client])
+
+  // const localStorageKK = localStorage.getItem('client')
+  // console.log(localStorageKK,'value')
+
+  // setClient(localStorageKK)
+
+  // console.log(komal,'newState')
   const limit = 10;
   let id = getPartnerIdFromUrl();
+
+  let url = `?limit=${limit}&page=${pageNumber + 1}`;
+
+  const urlMethod = (myVariable) => {
+    if (myVariable == "classUrl") {
+      url = "";
+    } else if (myVariable == "serahUrl") {
+      url = `?name=${searchTerm}`;
+    } else {
+      url = `?limit=${limit}&page=${pageNumber + 1}`;
+    }
+  };
+
   useEffect(() => {
+    console.log(client, "ahire");
     // let id = getPartnerIdFromUrl();
     axios({
       method: METHODS.GET,
-      url: `${process.env.REACT_APP_MERAKI_URL}/users/students/classes${
-        searchTerm.length > 0 ? `?name=${searchTerm}` : ""
-      }`,
+      // url: `${process.env.REACT_APP_MERAKI_URL}/users/students/classes${searchTerm.length >
+      //    0 ? `?name=${searchTerm}` : ""
+      //   }`,
+      url: `${process.env.REACT_APP_MERAKI_URL}/users/students/classes${url}`,
+      // url: `${process.env.REACT_APP_MERAKI_URL}/users/students/classes${client == false ? "" :
+      //   searchTerm.length > 0
+      //     ? `?name=${searchTerm}`
+      //     : `?limit=${limit}&page=${pageNumber + 1}`
+      //   }`,
       headers: { accept: "application/json", Authorization: user.data.token },
     }).then((res) => {
-      console.log(res, "data");
+      console.log(res, "student");
       if (
         id == user.data.user.partner_id ||
         user.data.user.rolesList.indexOf("admin") > -1
@@ -107,23 +151,27 @@ function PartnerStudentData() {
             .sort((a, b) => {
               return a.name.localeCompare(b.name);
             });
-          setStudents(data);
-          setSlicedStudents(
-            data.slice(pageNumber * limit, (pageNumber + 1) * limit)
-          );
+
+          client
+            ? setSlicedStudents(
+                data.slice(pageNumber * limit, (pageNumber + 1) * limit)
+              )
+            : setStudents(data);
           setTotalCount(res.data.count);
         }
       }
     });
-  }, [debouncedText]);
+  }, [debouncedText, pageNumber]);
 
-  useEffect(() => {
-    const slicedData = students.slice(
-      pageNumber * limit,
-      (pageNumber + 1) * limit
-    );
-    setSlicedStudents(slicedData);
-  }, [pageNumber]);
+  console.log(client, "kya ho raha hai");
+
+  // useEffect(() => {
+  //   const slicedData = students.slice(
+  //     pageNumber * limit,
+  //     (pageNumber + 1) * limit
+  //   );
+  //   setSlicedStudents(slicedData);
+  // }, [pageNumber]);
 
   const pageCount = Math.ceil(totalCount / limit);
   const changePage = ({ selected }) => {
@@ -131,6 +179,10 @@ function PartnerStudentData() {
   };
 
   const sortStudents = (byMethod) => {
+    localStorage.setItem("client", true);
+    //  client = true;
+    // setClient(true)
+    urlMethod("classUrl");
     let sortedStudents;
     if (byMethod === "name") {
       sortedStudents = students.sort().reverse();
@@ -206,10 +258,15 @@ function PartnerStudentData() {
       });
       sortedStudents = [...sortedStudents, ...zeroClass];
     }
-    setStudents(sortedStudents);
-    setSlicedStudents(
-      sortedStudents.slice(pageNumber * limit, (pageNumber + 1) * limit)
-    );
+    client
+      ? setSlicedStudents(
+          sortedStudents.slice(pageNumber * limit, (pageNumber + 1) * limit)
+        )
+      : setStudents(sortedStudents);
+    // setStudents(sortedStudents);
+    // setSlicedStudents(
+    //   sortedStudents.slice(pageNumber * limit, (pageNumber + 1) * limit)
+    // );
     if (sortMethod === "asc") {
       setSortClass("sorter");
       setSortMethod("dsc");
@@ -220,7 +277,7 @@ function PartnerStudentData() {
   };
 
   const handleChange = (value) => {
-    setFilteredData(true);
+    // setFilteredData(true);
     setFilterVal(value);
   };
 
@@ -252,9 +309,13 @@ function PartnerStudentData() {
           <input
             className="Search-bar"
             type="text"
-            placeholder="Search by student Name class"
+            placeholder="Search by student name"
             value={searchTerm}
             onChange={(e) => {
+              // client = false
+              // setClient(false)
+              urlMethod("serahUrl");
+              localStorage.setItem("client", false);
               setSearchTerm(e.target.value);
             }}
           />
@@ -301,7 +362,7 @@ function PartnerStudentData() {
         </div>
         <button
           onClick={() => {
-            setFilteredData(false);
+            // setFilteredData(false);
             setFilterVal([0, 0]);
           }}
           className="filter-clear"
@@ -320,6 +381,15 @@ function PartnerStudentData() {
               >
                 <BsArrowUpDown />
               </button>
+            </th>
+            <th className="student-name">
+              Partner
+              {/* <button
+                className={sort_class}
+                onClick={() => sortStudents("name")}
+              >
+                <BsArrowUpDown />
+              </button> */}
             </th>
 
             <th>
@@ -371,174 +441,90 @@ function PartnerStudentData() {
           </tr>
         </thead>
         <tbody>
-          {filteredData
-            ? filter.map((item) => {
-                let getStars = 0;
-                let totalStarts = item.classes_registered.length * 5;
-                item.classes_registered.map((stars) => {
-                  getStars = getStars + Number(stars.feedback.feedback);
-                });
-                return (
-                  <tr key={item.id}>
-                    <td data-column="Name">
-                      <Link
-                        className="t-data"
-                        //   to={{
-                        //     pathname: `/student/${item.id}`,
-                        //     state: {
-                        //       pass: item.classes_registered,
-                        //       passName: item.name,
-                        //     },
-                        //   }}
-                      >
-                        {item.name}
-                      </Link>
-                    </td>
+          {students.map((item) => {
+            let getStars = 0;
+            let totalStarts = item.classes_registered.length * 5;
+            item.classes_registered.map((stars) => {
+              getStars = getStars + Number(stars.feedback.feedback);
+            });
+            return (
+              <tr key={item.id}>
+                <td data-column="Name">
+                  <Link
+                    className="t-data"
+                    //   to={{
+                    //     pathname: `/student/${item.id}`,
+                    //     state: {
+                    //       pass: item.classes_registered,
+                    //       passName: item.name,
+                    //     },
+                    //   }}
+                  >
+                    {item.name}
+                  </Link>
+                </td>
+                <td data-column="Enrolled On">
+                  {item.partner ? item.partner.name : "NA"}
+                </td>
 
-                    <td data-column="Enrolled On">
-                      {item.formatted_created_at}
-                    </td>
-                    <td data-column="Total classes ">
-                      {" "}
-                      {item.classes_registered.length}
-                    </td>
+                <td data-column="Enrolled On">{item.formatted_created_at}</td>
+                <td data-column="Total classes ">
+                  {" "}
+                  {item.classes_registered.length}
+                </td>
 
-                    <td data-column="Last class title">
-                      {item.classes_registered &&
-                      item.classes_registered.length > 0 &&
-                      item.classes_registered[
+                <td data-column="Last class title">
+                  {item.classes_registered &&
+                  item.classes_registered.length > 0 &&
+                  item.classes_registered[item.classes_registered.length - 1][
+                    "title"
+                  ] != ""
+                    ? item.classes_registered[
                         item.classes_registered.length - 1
-                      ]["title"] != ""
-                        ? item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["title"]
-                        : "NA"}
-                    </td>
-                    <td data-column="Last class date">
-                      {item.classes_registered &&
-                      item.classes_registered.length > 0 &&
-                      item.classes_registered[
+                      ]["title"]
+                    : "NA"}
+                </td>
+                <td data-column="Last class date">
+                  {item.classes_registered &&
+                  item.classes_registered.length > 0 &&
+                  item.classes_registered[item.classes_registered.length - 1][
+                    "formatted_start_time"
+                  ]
+                    ? item.classes_registered[
                         item.classes_registered.length - 1
                       ]["formatted_start_time"]
-                        ? item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["formatted_start_time"]
-                        : "NA"}
-                    </td>
-                    <td data-column="Last class time">
-                      {item.classes_registered &&
-                      item.classes_registered.length > 0 &&
-                      item.classes_registered[
+                    : "NA"}
+                </td>
+                <td data-column="Last class time">
+                  {item.classes_registered &&
+                  item.classes_registered.length > 0 &&
+                  item.classes_registered[item.classes_registered.length - 1][
+                    "formatted_end_time"
+                  ]
+                    ? item.classes_registered[
                         item.classes_registered.length - 1
                       ]["formatted_end_time"]
-                        ? item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["formatted_end_time"]
-                        : "NA"}
-                    </td>
-                    <td data-column="Avg rating ">
-                      {[1, 2, 3, 4, 5].map((star) => {
-                        return Math.ceil(item.averageRating) > 0 &&
-                          star <= Math.ceil(item.averageRating) ? (
-                          <span
-                            className="fa fa-star"
-                            style={{ color: "#D55F31" }}
-                          ></span>
-                        ) : (
-                          <span
-                            className="fa fa-star"
-                            style={{ color: "gray" }}
-                          ></span>
-                        );
-                      })}
-                    </td>
-                  </tr>
-                );
-              })
-            : slicedStudents.map((item) => {
-                let getStars = 0;
-                let totalStarts = item.classes_registered.length * 5;
-                item.classes_registered.map((stars) => {
-                  getStars = getStars + Number(stars.feedback.feedback);
-                });
-                return (
-                  <tr key={item.id}>
-                    <td data-column="Name">
-                      <Link
-                        className="t-data"
-                        //   to={{
-                        //     pathname: `/student/${item.id}`,
-                        //     state: {
-                        //       pass: item.classes_registered,
-                        //       passName: item.name,
-                        //     },
-                        //   }}
-                      >
-                        {item.name}
-                      </Link>
-                    </td>
-
-                    <td data-column="Enrolled On">
-                      {item.formatted_created_at}
-                    </td>
-                    <td data-column="Total classes ">
-                      {" "}
-                      {item.classes_registered.length}
-                    </td>
-
-                    <td data-column="Last class title">
-                      {item.classes_registered &&
-                      item.classes_registered.length > 0 &&
-                      item.classes_registered[
-                        item.classes_registered.length - 1
-                      ]["title"] != ""
-                        ? item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["title"]
-                        : "NA"}
-                    </td>
-                    <td data-column="Last class date">
-                      {item.classes_registered &&
-                      item.classes_registered.length > 0 &&
-                      item.classes_registered[
-                        item.classes_registered.length - 1
-                      ]["formatted_start_time"]
-                        ? item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["formatted_start_time"]
-                        : "NA"}
-                    </td>
-                    <td data-column="Last class time">
-                      {item.classes_registered &&
-                      item.classes_registered.length > 0 &&
-                      item.classes_registered[
-                        item.classes_registered.length - 1
-                      ]["formatted_end_time"]
-                        ? item.classes_registered[
-                            item.classes_registered.length - 1
-                          ]["formatted_end_time"]
-                        : "NA"}
-                    </td>
-                    <td data-column="Avg rating ">
-                      {[1, 2, 3, 4, 5].map((star) => {
-                        return Math.ceil(item.averageRating) > 0 &&
-                          star <= Math.ceil(item.averageRating) ? (
-                          <span
-                            className="fa fa-star"
-                            style={{ color: "#D55F31" }}
-                          ></span>
-                        ) : (
-                          <span
-                            className="fa fa-star"
-                            style={{ color: "gray" }}
-                          ></span>
-                        );
-                      })}
-                    </td>
-                  </tr>
-                );
-              })}
-          {message ? <h1 className="Message">{message}</h1> : null}
+                    : "NA"}
+                </td>
+                <td data-column="Avg rating ">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    return Math.ceil(item.averageRating) > 0 &&
+                      star <= Math.ceil(item.averageRating) ? (
+                      <span
+                        className="fa fa-star"
+                        style={{ color: "#D55F31" }}
+                      ></span>
+                    ) : (
+                      <span
+                        className="fa fa-star"
+                        style={{ color: "gray" }}
+                      ></span>
+                    );
+                  })}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -546,3 +532,87 @@ function PartnerStudentData() {
 }
 
 export default PartnerStudentData;
+
+// : slicedStudents.map((item) => {
+//     let getStars = 0;
+//     let totalStarts = item.classes_registered.length * 5;
+//     item.classes_registered.map((stars) => {
+//       getStars = getStars + Number(stars.feedback.feedback);
+//     });
+//     return (
+//       <tr key={item.id}>
+//         <td data-column="Name">
+//           <Link
+//             className="t-data"
+
+//           >
+//             {item.name}
+//           </Link>
+//         </td>
+//         <td data-column="Enrolled On">
+//         {item.partner ? item.partner.name : "NA"}
+//         </td>
+
+//         <td data-column="Enrolled On">
+//           {item.formatted_created_at}
+//         </td>
+//         <td data-column="Total classes ">
+//           {" "}
+//           {item.classes_registered.length}
+//         </td>
+
+//         <td data-column="Last class title">
+//           {item.classes_registered &&
+//           item.classes_registered.length > 0 &&
+//           item.classes_registered[
+//             item.classes_registered.length - 1
+//           ]["title"] != ""
+//             ? item.classes_registered[
+//                 item.classes_registered.length - 1
+//               ]["title"]
+//             : "NA"}
+//         </td>
+//         <td data-column="Last class date">
+//           {item.classes_registered &&
+//           item.classes_registered.length > 0 &&
+//           item.classes_registered[
+//             item.classes_registered.length - 1
+//           ]["formatted_start_time"]
+//             ? item.classes_registered[
+//                 item.classes_registered.length - 1
+//               ]["formatted_start_time"]
+//             : "NA"}
+//         </td>
+//         <td data-column="Last class time">
+//           {item.classes_registered &&
+//           item.classes_registered.length > 0 &&
+//           item.classes_registered[
+//             item.classes_registered.length - 1
+//           ]["formatted_end_time"]
+//             ? item.classes_registered[
+//                 item.classes_registered.length - 1
+//               ]["formatted_end_time"]
+//             : "NA"}
+//         </td>
+//         <td data-column="Avg rating ">
+//           {[1, 2, 3, 4, 5].map((star) => {
+//             return Math.ceil(item.averageRating) > 0 &&
+//               star <= Math.ceil(item.averageRating) ? (
+//               <span
+//                 className="fa fa-star"
+//                 style={{ color: "#D55F31" }}
+//               ></span>
+//             ) : (
+//               <span
+//                 className="fa fa-star"
+//                 style={{ color: "gray" }}
+//               ></span>
+//             );
+//           })}
+//         </td>
+//       </tr>
+//     );
+//   })}
+{
+  /* {message ? <h1 className="Message">{message}</h1> : null} */
+}
