@@ -100,9 +100,6 @@ input[type="radio"]:checked {
   .disabled-button {
     margin-left: 200px;
     cursor: not-allowed;
-    @include breakpoint-mobile {
-      margin-left: 60px;
-    }
   }
 
   .radio-pointer {
@@ -202,6 +199,7 @@ input[type="radio"]:checked {
   display: flex;
   justify-content: space-between;
   // width: 80%;
+  flex-wrap: wrap;
 }
 
 .create-class-select {
@@ -241,4 +239,25 @@ input[type="radio"]:checked {
 .enrolment_buttons button.active {
   color: #48a145;
   background-color: #e9f5e9;
+}
+@media screen and (max-width: 500px) {
+  .input-field {
+    width: 100%;
+  }
+  .textarea-field {
+    width: 95%;
+  }
+  .input-field--short {
+    width: 15rem;
+  }
+  .ng-create-class .radio-pointer {
+    width: 100%;
+  }
+  input[type="radio"] {
+    margin-block: 10px;
+  }
+  .ng-create-class .enabled-button,
+  .ng-create-class .disabled-button {
+    margin-left: 35px;
+  }
 }
