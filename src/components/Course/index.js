@@ -19,7 +19,6 @@ function Course() {
   const query = new URLSearchParams(useLocation().search).get("search");
   const [search, setSearch] = useState(query ? query : "");
   const history = useHistory();
-  const user = useSelector(({ User }) => User);
   const [pathwaysCourses, setPathwaysCourses] = useState([]);
 
   useEffect(() => {
@@ -32,7 +31,6 @@ function Course() {
       url: `${process.env.REACT_APP_MERAKI_URL}/pathways?courseType=json`,
       headers: {
         accept: "application/json",
-        Authorization: user.data.token,
       },
     }).then((res) => {
       setPathwaysCourses(res.data.pathways);
