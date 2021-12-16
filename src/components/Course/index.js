@@ -69,9 +69,41 @@ function Course() {
     });
   });
 
+  let filteredPathwayCourse =
+    pathwaysCourses &&
+    pathwaysCourses.filter((pathway) => {
+      return pathway.courses.filter(
+        (course) => {
+          console.log("course name", course.name);
+          console.log("search", search);
+          if (course) {
+            return course.name.toLowerCase().includes(search.toLowerCase());
+          }
+        }
+        // course.name.toLowerCase().includes(search.toLowerCase())
+      );
+      // {
+      //   console.log("course", course.name);
+      //   // pathwayCourseId.push(course.id);
+      //   // return course.id;
+      // });
+    });
+
+  console.log("filteredPathwayCourse", filteredPathwayCourse);
+
   let otherCourses =
     filteredCourse &&
-    filteredCourse.filter((item) => !pathwayCourseId.includes(item.id));
+    filteredCourse.filter((item) => {
+      // console.log("item", item.name);
+      if (!pathwayCourseId.includes(item.id)) {
+        return item.name.toLowerCase().includes(search.toLowerCase());
+      }
+    });
+  // !pathwayCourseId.includes(item.id));
+
+  console.log("otherCourses", otherCourses);
+
+  console.log("pathwaysCourses", pathwaysCourses);
 
   return (
     <div>
@@ -98,7 +130,7 @@ function Course() {
       )} */}
       <h1 className="ng-course">
         <CourseList
-          list={pathwaysCourses}
+          list={filteredPathwayCourse}
           otherCourses={otherCourses}
           title="Aap inn courses ko search kiya hai"
         />
