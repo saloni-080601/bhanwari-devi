@@ -1,0 +1,259 @@
+@import "../../sass/colors.scss";
+@import "../../sass/mixins.scss";
+* {
+  box-sizing: border-box;
+  textarea:focus,
+  input:focus {
+    outline: none;
+  }
+}
+.ng-header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  justify-content: space-between;
+  background-color: white;
+  z-index: 2;
+  position: relative;
+}
+.logo {
+  height: 100%;
+}
+.logo a {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+.meraki-logo {
+  background-image: url("../../asset/meraki.png");
+  width: 58px;
+  height: 70px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  @include breakpoint-mobile {
+    margin-left: 12px;
+  }
+}
+.meraki-name {
+  background-image: url("../../asset/meraki-name.png");
+  width: 98px;
+  height: 70px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 10px;
+  @include breakpoint-mobile {
+    margin-left: 12px;
+  }
+}
+.ng-dropdown {
+  background-color: transparent;
+  border: none;
+  position: relative;
+  font-size: 16px;
+  cursor: pointer;
+}
+.ng-dropdown::after {
+  content: "";
+  position: absolute;
+  background-image: url("../../asset/dropdown-icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 9px;
+  width: 18px;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dropdown-container {
+  display: flex;
+  width: 28%;
+  justify-content: space-between;
+}
+.header-searchbar {
+  width: 35%;
+  position: relative;
+}
+.header-searchbar input {
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  border-bottom: 2px solid black;
+  padding-left: 30px;
+  font-size: 18px;
+  padding-bottom: 8px;
+}
+.header-searchbar::before {
+  content: "";
+  position: absolute;
+  background-image: url("../../asset/search.svg");
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: contain;
+  height: 30px;
+  width: 25px;
+  left: 0px;
+  top: 0px;
+}
+.login-btn,
+.option-login-btn {
+  background-color: #48a145;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.dropdown-content {
+  position: absolute;
+  box-shadow: 0px 24px 38px rgba(46, 46, 46, 0.06),
+    0px 9px 46px rgba(46, 46, 46, 0.04), 0px 11px 15px rgba(46, 46, 46, 0.08);
+  border-radius: 8px;
+  min-width: 140px;
+  text-align: left;
+  left: 0;
+  top: 150%;
+  z-index: 1;
+  background-color: white;
+  display: none;
+  cursor: auto;
+}
+.dropdown-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.dropdown-content ul li {
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.dropdown-content ul li:hover {
+  background-color: #e9f5e9;
+  transition: all ease 0.3s;
+}
+.pathway-dropdown {
+  width: max-content;
+}
+.pathway-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.pathway-card {
+  margin: 15px;
+  min-width: 300px;
+  max-width: 300px;
+  padding: 5px 70px 5px 10px;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+}
+.pathway-card:hover {
+  background-color: #e9f5e9;
+  transition: all ease 0.3s;
+}
+.pathway-dropdown h2 {
+  font-size: 18px;
+  margin: 10px 20px;
+  margin-bottom: 0;
+}
+.pathway-card h2 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+.pathway-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.pathway-dropdown hr {
+  margin: 0 20px;
+}
+.hamburger-menu {
+  background-image: url("../../asset/menu.png");
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: contain;
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+  display: none;
+}
+.ng-header-options {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  align-items: flex-start;
+  width: 100%;
+  background-color: #e4f8ca;
+  height: calc(100vh - 50px);
+  z-index: 999;
+  transition: all 0.3s ease-in;
+  overflow-y: hidden;
+  top: 85px;
+  left: 0;
+  padding: 30px 20px;
+}
+.options-item {
+  font-size: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  width: max-content;
+  font-weight: bold;
+  cursor: pointer;
+}
+.options-item::after {
+  content: "";
+  position: absolute;
+  background-image: url("../../asset/dropdown-icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 9px;
+  width: 18px;
+  right: -25px;
+  top: 60%;
+  transform: translateY(-50%);
+}
+.options-item:hover {
+  color: #48a145;
+  transition: all ease-in 0.2s;
+}
+
+@media screen and (max-width: 1050px) {
+  .header-searchbar {
+    width: 28%;
+  }
+  .meraki-name {
+    width: 74px;
+    height: 70px;
+  }
+  .dropdown-container {
+    width: 31%;
+  }
+}
+@media screen and (max-width: 930px) {
+  .meraki-name {
+    display: none;
+  }
+  .header-searchbar {
+    width: 26%;
+  }
+  .dropdown-container {
+    width: 35%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .dropdown-container,
+  .ng-dropdown,
+  .login-btn,
+  .d-inline,
+  .header-searchbar {
+    display: none;
+  }
+  .hamburger-menu {
+    display: block;
+  }
+}

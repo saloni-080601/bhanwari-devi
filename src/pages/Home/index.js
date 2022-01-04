@@ -181,7 +181,7 @@ const partners = [
 
 export const Home = () => {
   return (
-    <main className="home">
+    <main className="home-page">
       <div className="page-content">
         <h1 className="page-title">
           Let income not be a barrier to your career dreams

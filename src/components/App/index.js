@@ -1,7 +1,7 @@
 import React from "react";
 
 import Routing from "../../routing";
-import Header from "../Header";
+import Header from "../New-Header";
 
 import "./styles.scss";
 
