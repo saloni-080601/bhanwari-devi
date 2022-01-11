@@ -8,13 +8,21 @@ import softskills from "../../asset/softSkills.png";
 import { useState, useEffect, useRef } from "react";
 
 function Header() {
+  const [responsive, setResponsive] = useState(false);
   const [explore, setExplore] = useState(false);
   const [about, setAbout] = useState(false);
   const [involve, setInvolve] = useState(false);
   const [language, setLanguage] = useState(false);
-  console.log(explore, about, involve, language);
+  const [optionItem, setOptionItem] = useState({
+    explore: false,
+    about: false,
+    language: false,
+  });
   return (
-    <div className="ng-header">
+    <div
+      className="ng-header"
+      style={responsive ? { backgroundColor: "#e4f8ca" } : {}}
+    >
       <div className="logo">
         <a href="/">
           <div className="meraki-logo" />
@@ -156,11 +164,78 @@ function Header() {
         </button>
       </OutsideAlerter>
       <button className="login-btn">Log In</button>
-      <a className="hamburger-menu"></a>
-      <div className="ng-header-options">
-        <a className="options-item">Explore</a>
-        <a className="options-item">About</a>
-        <a className="options-item">Get Involved</a>
+      <a
+        className="hamburger-menu"
+        onClick={() => {
+          setResponsive(!responsive);
+        }}
+      ></a>
+      <div
+        className="ng-header-options"
+        style={
+          responsive
+            ? { height: "auto", padding: "30px 20px", overflow: "auto" }
+            : {}
+        }
+      >
+        <a
+          className="options-item"
+          onClick={() => {
+            setOptionItem({ ...optionItem, explore: !optionItem.explore });
+          }}
+        >
+          Explore
+        </a>
+        <span
+          className="options-item-options"
+          style={optionItem.explore ? { height: "auto", overflow: "auto" } : {}}
+        >
+          <ul>
+            <li>Python</li>
+            <li>Typing Guru</li>
+            <li>Spoken English</li>
+            <li>Javascript</li>
+            <li>Soft Skills</li>
+            <li>Open Courses</li>
+          </ul>
+        </span>
+        <a
+          className="options-item"
+          onClick={() => {
+            setOptionItem({ ...optionItem, about: !optionItem.about });
+          }}
+        >
+          About
+        </a>
+        <span
+          className="options-item-options"
+          style={optionItem.about ? { height: "auto", overflow: "auto" } : {}}
+        >
+          <ul>
+            <li>Meraki Team</li>
+            <li>Alumini</li>
+            <li>Blog</li>
+          </ul>
+        </span>
+        <a
+          className="options-item"
+          onClick={() => {
+            setOptionItem({ ...optionItem, involve: !optionItem.involve });
+          }}
+        >
+          Get Involved
+        </a>
+        <span
+          className="options-item-options"
+          style={optionItem.involve ? { height: "auto", overflow: "auto" } : {}}
+        >
+          <ul>
+            <li>Be a Prtner</li>
+            <li>Donate</li>
+            <li>Careers</li>
+            <li>Volunteer</li>
+          </ul>
+        </span>
         <a className="options-item">Download Meraki App</a>
         <button className="option-login-btn">Log In</button>
       </div>
