@@ -2,6 +2,7 @@ import React from "react";
 
 import Routing from "../../routing";
 import Header from "../New-Header";
+import Footer from "../New-Footer";
 
 import "./styles.scss";
 
@@ -13,6 +14,7 @@ function App() {
         {" "}
         <Routing />{" "}
       </div>
+      <Footer />
     </div>
   );
 }
