@@ -302,7 +302,7 @@ function Class({ classToEdit, indicator }) {
         } else if (fieldName === "on_days") {
           formFields[fieldName] = value.split(",");
         } else if (fieldName === pathwayId) {
-          formFields["course_id"] = pathwayId;
+          formFields["pathway_id"] = pathwayId;
         } else {
           formFields[fieldName] = value;
         }
@@ -331,7 +331,6 @@ function Class({ classToEdit, indicator }) {
           return (
             <>
               <label htmlFor="type">Class Type</label>
-              {console.log("isEditMode", isEditMode)}
               <span>
                 <label htmlFor="type1" className="radio-pointer">
                   <input
@@ -346,7 +345,6 @@ function Class({ classToEdit, indicator }) {
                     checked={
                       formFieldsState.type === "cohort" ? "checked" : false
                     }
-                    // disabled={formFieldsState[TYPE] === "cohort" ? true : false}
                     disabled={
                       isEditMode
                         ? formFieldsState[TYPE] === "cohort"
@@ -991,7 +989,6 @@ function Class({ classToEdit, indicator }) {
                   />
                 </>
               )}
-              {console.log("formFieldsState[TYPE]", formFieldsState[TYPE])}
               <div
                 className={
                   checkEquivalence ? "disabled-button" : "enabled-button"
