@@ -43,6 +43,9 @@
   font-size: 22px;
   color: #83b344;
 }
+.current {
+  border-bottom: 2px solid #83b344;
+}
 
 .meraki-logo {
   background-image: url("../../asset/meraki.png");
@@ -94,15 +97,15 @@
   display: none;
 }
 
-.active {
-  background-color: red;
-  color: #fff;
-}
+// .active {
+//   background-color: red;
+//   color: #fff;
+// }
 
-.active a {
-  background-color: red;
-  color: #fff;
-}
+// .active a {
+//   background-color: red;
+//   color: #fff;
+// }
 
 .ng-header > #nav-check {
   display: none;

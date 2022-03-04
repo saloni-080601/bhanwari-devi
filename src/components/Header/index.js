@@ -4,6 +4,7 @@ import axios from "axios";
 import { METHODS } from "../../services/api";
 
 import { PATHS } from "../../constant";
+import { NavLink } from "react-router-dom";
 import { actions as userActions } from "../User/redux/action";
 import { hasOneFrom } from "../../common/utils";
 import "./styles.scss";
@@ -45,16 +46,24 @@ const AuthenticatedHeaderOption = () => {
     <>
       {canSpecifyUserBaseRole ? (
         <>
-          <a className="item" href={PATHS.USER}>
+          <NavLink className="item" to={PATHS.USER} activeClassName="current">
             User
-          </a>
+          </NavLink>
 
-          <a className="item" href={PATHS.VOLUNTEER}>
+          <NavLink
+            className="item"
+            to={PATHS.VOLUNTEER}
+            activeClassName="current"
+          >
             Volunteers
-          </a>
-          <a className="item" href={PATHS.PARTNERS}>
+          </NavLink>
+          <NavLink
+            className="item"
+            to={PATHS.PARTNERS}
+            activeClassName="current"
+          >
             Partners
-          </a>
+          </NavLink>
         </>
       ) : null}
 
@@ -73,7 +82,7 @@ const AuthenticatedHeaderOption = () => {
         </>
       ) : null}
 
-      {["ADMISSION", "COURSE", "MENTOR", "CLASS", "OPPORTUNITIES", "AFE"].map(
+      {["COURSE", "MENTOR", "CLASS", "ADMISSION", "OPPORTUNITIES", "AFE"].map(
         (item) => (
           <MenuOption
             item={item}
@@ -129,21 +138,21 @@ const AuthenticatedLeftHeaderOption = () => {
 const PublicMenuOption = () => {
   return (
     <>
-      <a className="item" href={PATHS.AFE}>
+      <NavLink className="item" to={PATHS.AFE} activeClassName="current">
         Amazon Partnership
-      </a>
-      <a className="item" href={PATHS.LOGIN}>
+      </NavLink>
+      <NavLink className="item" to={PATHS.LOGIN} activeClassName="current">
         Login/Signup
-      </a>
+      </NavLink>
     </>
   );
 };
 
 const PublicLeftMenuOption = () => {
   return (
-    <a className="item" href={PATHS.COURSE}>
+    <NavLink className="item" to={PATHS.COURSE} activeClassName="current">
       Courses
-    </a>
+    </NavLink>
   );
 };
 
@@ -157,9 +166,13 @@ const MenuOption = (props) => {
     AFE: "Amazon Partnership",
   };
   return (
-    <a className={props.className} href={PATHS[props.item]}>
+    <NavLink
+      className={props.className}
+      to={PATHS[props.item]}
+      activeClassName="current"
+    >
       {NAMES[props.item]}
-    </a>
+    </NavLink>
   );
 };
 
