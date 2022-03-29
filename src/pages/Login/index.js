@@ -82,11 +82,11 @@ function Login(props) {
     }
   }
 
-  if (rolesList != false) {
+  if (rolesList !== false) {
     if (!(rolesList.includes("partner") || rolesList.includes("admin"))) {
       return <Redirect to={PATHS.COURSE} />;
     }
-  } else if (rolesList.length == 0) {
+  } else if (rolesList.length === 0) {
     return <Redirect to={PATHS.COURSE} />;
   }
 

@@ -99,6 +99,8 @@ function MerakiEntry(props) {
         </Grid>
         <Grid item>
           <Button
+            href="https://play.google.com/store/apps/details?id=org.merakilearn"
+            target="_blank"
             className={isActive ? classes.responsiveBtn : classes.LearningBtn}
             variant="outlined"
             color="primary"

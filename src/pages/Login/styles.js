@@ -3,7 +3,6 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles((theme) => ({
   merakiLogin: {
     marginTop: "60px",
-    width: "240px",
   },
   googleLogin: {
     justifyContent: "center",
