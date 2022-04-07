@@ -98,6 +98,7 @@ function Login(props) {
     }
   }
 
+  //need to change according to new design flow
   if (rolesList != false) {
     if (!(rolesList.includes("partner") || rolesList.includes("admin"))) {
       return <Redirect to={PATHS.COURSE} />;

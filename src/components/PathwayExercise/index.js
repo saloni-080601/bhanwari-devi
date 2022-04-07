@@ -82,7 +82,7 @@ function PathwayExercise() {
       headers: {
         "version-code": 40,
         accept: "application/json",
-        Authorization: user.data.token,
+        // Authorization: user.data.token,
       },
     }).then((res) => {
       console.log("res", res.data.course.exercises[0].content);
