@@ -99,8 +99,6 @@ function AuthenticatedHeaderOption({ toggleDrawer, leftDrawer }) {
     });
   }, []);
 
-  console.log("profile", profile);
-
   const partnerGroupId = user.data.user.partner_group_id;
 
   const canSpecifyPartnerGroupId =

@@ -89,6 +89,11 @@ function PathwayCourse() {
     dispatch(pathwayActions.getPathwaysCourse({ pathwayId: pathwayId }));
   }, [pathwayId]);
 
+  console.log(
+    "window.location.pathname",
+    window.location.pathname.split("/")[1]
+  );
+
   return (
     <>
       <Container className={classes.pathwayContainer} maxWidth="lg">

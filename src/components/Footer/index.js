@@ -138,35 +138,40 @@ function Footer() {
       });
     });
 
-  useEffect(() => {
-    if (
-      window.location.pathname.split("/").includes("course-content") ||
-      window.location.pathname.split("/").includes("login") ||
-      window.location.pathname.split("/").includes("profile")
-    ) {
-      setShowFooter(false);
-    }
-  }, []);
+  console.log(
+    "window.location.pathname",
+    window.location.pathname.split("/")[1]
+  );
 
-  const history = useHistory();
-  history.listen((location, action) => {
-    if (
-      location.pathname.split("/").includes("course-content") ||
-      location.pathname.split("/").includes("login") ||
-      location.pathname.split("/").includes("profile")
-    ) {
-      console.log("not in header");
-      setShowFooter(false);
-    } else {
-      setShowFooter(true);
-    }
-  });
+  // useEffect(() => {
+  //   if (
+  //     window.location.pathname.split("/").includes("course-content") ||
+  //     window.location.pathname.split("/").includes("login") ||
+  //     window.location.pathname.split("/").includes("profile")
+  //   ) {
+  //     setShowFooter(false);
+  //   }
+  // }, []);
+
+  // const history = useHistory();
+  // history.listen((location, action) => {
+  //   if (
+  //     location.pathname.split("/").includes("course-content") ||
+  //     location.pathname.split("/").includes("login") ||
+  //     location.pathname.split("/").includes("profile")
+  //   ) {
+  //     console.log("not in header");
+  //     setShowFooter(false);
+  //   } else {
+  //     setShowFooter(true);
+  //   }
+  // });
 
   return (
     <Box
-      style={{
-        display: showFooter ? "inherit" : "none",
-      }}
+      // style={{
+      //   display: showFooter ? "inherit" : "none",
+      // }}
       maxWidth="false"
       bgcolor="primary.light"
     >
