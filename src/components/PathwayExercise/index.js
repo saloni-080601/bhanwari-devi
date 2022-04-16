@@ -26,6 +26,40 @@ import {
   MenuItem,
 } from "@mui/material";
 
+const Exercise = ({
+  course,
+  // index,
+  exerciseId,
+  setExerciseId,
+  classes,
+  history,
+  params,
+}) => {
+  const start = exerciseId > 6 ? exerciseId - 6 : 0;
+  console.log("start", start);
+  const courseLength =
+    course && course.length && exerciseId < 7
+      ? course.slice(start, 7)
+      : course.slice(start, exerciseId + 1);
+  console.log("courseLength", courseLength);
+  return (
+    <>
+      {courseLength.map((exercise, index) => {
+        return (
+          <NavigationComponent
+            params={params}
+            history={history}
+            index={index + start}
+            exerciseId={exerciseId}
+            setExerciseId={setExerciseId}
+            classes={classes}
+          />
+        );
+      })}
+    </>
+  );
+};
+
 function NavigationComponent({
   index,
   exerciseId,
@@ -34,6 +68,8 @@ function NavigationComponent({
   history,
   params,
 }) {
+  console.log("exerciseId", exerciseId);
+  console.log("index", index);
   return (
     <>
       <img
@@ -82,7 +118,7 @@ function PathwayExercise() {
       },
     })
       .then((res) => {
-        console.log("res", res.data.course.exercises[0]?.content);
+        // console.log("res", res.data.course.exercises[0]?.content);
         setCourse(res.data.course.exercises);
       })
       .catch((err) => {
@@ -117,8 +153,8 @@ function PathwayExercise() {
     }
   };
 
-  console.log("course", course);
-  console.log("exerciseId", exerciseId);
+  // console.log("course", course);
+  // console.log("exerciseId", exerciseId);
   const [language, setLanguage] = useState("en");
   return (
     <>
@@ -156,19 +192,43 @@ function PathwayExercise() {
                   onClick={previousClickHandler}
                 />
                 <div className="gridtopofcourse7">
-                  {course &&
+                  {exerciseId >
+                  (
+                    <Exercise
+                      course={course}
+                      params={params}
+                      history={history}
+                      // index={index}
+                      exerciseId={exerciseId + 1}
+                      setExerciseId={setExerciseId}
+                      classes={classes}
+                    />
+                  )}
+                  <Exercise
+                    course={course}
+                    params={params}
+                    history={history}
+                    // index={index}
+                    exerciseId={exerciseId}
+                    setExerciseId={setExerciseId}
+                    classes={classes}
+                  />
+                  {/* {course &&
                     course.map((exercise, index) => {
                       if (exerciseId < 7 && index < 7) {
-                        return (
-                          <NavigationComponent
-                            params={params}
-                            history={history}
-                            index={index}
-                            exerciseId={exerciseId}
-                            setExerciseId={setExerciseId}
-                            classes={classes}
-                          />
-                        );
+                        console.log("exerciseId", exerciseId);
+                        console.log("index", index);
+                      return (
+                        <Exercise
+                          course={course}
+                          params={params}
+                          history={history}
+                          index={index}
+                          exerciseId={exerciseId}
+                          setExerciseId={setExerciseId}
+                          classes={classes}
+                        />
+                      );
                       } else if (exerciseId >= 7 && index >= 7 && index < 14) {
                         return (
                           <NavigationComponent
@@ -196,7 +256,7 @@ function PathwayExercise() {
                           />
                         );
                       }
-                    })}
+                    })} */}
                 </div>
 
                 <ArrowForwardIosIcon

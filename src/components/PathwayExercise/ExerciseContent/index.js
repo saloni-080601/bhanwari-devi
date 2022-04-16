@@ -287,8 +287,6 @@ function ExerciseContent({ exerciseId, lang }) {
     // }, [courseId, exerciseId, id, user.data.token]);
   }, [courseId, exerciseId, lang]);
 
-  console.log("lang", lang);
-
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 5, mb: 8 }}>
