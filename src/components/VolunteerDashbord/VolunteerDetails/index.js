@@ -19,8 +19,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
 import {
   Container,
@@ -28,15 +26,20 @@ import {
   Typography,
   Grid,
   Divider,
+  Select,
+  MenuItem,
+  Button,
+  Box,
+  FormControl,
   useMediaQuery,
   List,
   ListItem,
   ListItemText,
+  Toolbar,
   // TableRow
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { Box, fontSize } from "@mui/system";
+import { fontSize } from "@mui/system";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -97,6 +100,10 @@ function VolunteerDashboard() {
       pageCount = Math.ceil(slicedVolunteer && slicedVolunteer.length / limit);
     });
   }, []);
+
+  // const handleChange = (event) => {
+  //   setAge(event.target.value);
+  // };
 
   const languageMap = {
     hi: "Hindi",
@@ -189,9 +196,11 @@ function VolunteerDashboard() {
     setSlicedVolunteer(slicedData);
   }, [debouncedText, pageNumber]);
 
+  console.log("selctedPathway", selctedPathway);
+
   return (
     <>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Typography variant="subtitle1" mt={10} mb={3}>
           Volunteer List
         </Typography>
@@ -257,22 +266,118 @@ function VolunteerDashboard() {
             <Typography sx={{ color: "Gray" }}>Filter</Typography>
           </Button>
         </Stack>
-        {selctedPathway === "Filter" ? (
-          // <div className="filterBar">
-          // <div className="filter">
-          <Grid direction="row" spacing={2} sx={4}>
-            <Typography>Duration</Typography>
+        {selctedPathway === "Filter" && (
+          <Box sx={{ display: "flex" }}>
+            {console.log("dropdowns", dropdowns)}
+            {/* <Toolbar> */}
+            <Box sx={{ mr: 4 }}>
+              <Typography sx={{ color: "Gray" }}>Duration</Typography>
+              <Select
+                value={week}
+                onChange={(e) => {
+                  setWeek(e.target.value);
+                  console.log("value", e.target.value);
+                  // handleDropdown("duration");
+                }}
+                // onClick={(e) => handleDropdown(e)("duration")}
+                variant="standard"
+                sx={{ minWidth: 365, p: 1 }}
+              >
+                {/* {dropdowns.duration && (
+                <> */}
+                <MenuItem value={"All"}>All Time</MenuItem>
+                <MenuItem value={1}>Past 1 week</MenuItem>
+                <MenuItem value={4}>Past 4 week</MenuItem>
+                <MenuItem value={8}>Past 8 week</MenuItem>
+                <MenuItem value={12}>Past 12 week</MenuItem>
+                {/* </>
+              )} */}
+                <Button sx={{ textAlign: "right" }}>Apply</Button>
+              </Select>
+            </Box>
+            <Box sx={{ mr: 4 }}>
+              <Typography sx={{ color: "Gray" }}>Language</Typography>
+              <Select
+                value={week}
+                onChange={(e) => {
+                  setLangue(e.target.value);
+                  console.log("value", e.target.value);
+                  // handleDropdown("duration");
+                }}
+                // onClick={(e) => {
+                //   setLangue("All");
+                // }}
+                // onClick={(e) => handleDropdown(e)("duration")}
+                variant="standard"
+                sx={{ minWidth: 365, p: 1 }}
+              >
+                {/* {dropdowns.duration && (
+                <> */}
+                <MenuItem value={"All"}>All Language</MenuItem>
+                <MenuItem value={1}>English</MenuItem>
+                <MenuItem value={2}>Hindi</MenuItem>
 
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-              {/* <InputLabel>All Time</InputLabel> */}
-              <NativeSelect>
-                {/* <Button
-                  onClick={(e) => handleDropdown(e)("duration")}
-                  label = {week === "All" ? "All Time" : `Past ${week} week`}
-                >All Time</Button> */}
-                {dropdowns.duration ? (
-                  <Box>
-                    <MenuItem
+                {/* </>
+              )} */}
+                <Button sx={{ textAlign: "right" }}>Apply</Button>
+              </Select>
+            </Box>
+            <Box sx={{ mr: 4 }}>
+              <Typography sx={{ color: "Gray" }}>Avg. Rating</Typography>
+              <Select
+                value={week}
+                onChange={(e) => {
+                  setRating(e.target.value);
+                  console.log("value", e.target.value);
+                  // handleDropdown("duration");
+                }}
+                // onClick={(e) => handleDropdown(e)("duration")}
+                variant="standard"
+                sx={{ minWidth: 365, p: 1 }}
+              >
+                {/* {dropdowns.duration && (
+                <> */}
+                <MenuItem value={"All"}>All Ratings</MenuItem>
+                <MenuItem value={4}>
+                  <img src={star} />
+                  <img src={star} />
+                  <img src={star} />
+                  <img src={star} /> & Above
+                </MenuItem>
+                <MenuItem value={3}>
+                  {" "}
+                  <img src={star} />
+                  <img src={star} />
+                  <img src={star} />
+                </MenuItem>
+                <MenuItem value={2}>
+                  {" "}
+                  <img src={star} />
+                  <img src={star} />
+                </MenuItem>
+                <MenuItem value={1}>
+                  <img src={star} />
+                </MenuItem>
+                {/* </>
+              )} */}
+                <Button sx={{ textAlign: "right" }}>Apply</Button>
+              </Select>
+            </Box>
+            {/* </Toolbar> */}
+          </Box>
+        )}
+
+        {selctedPathway === "Filter" ? (
+          <div className="filterBar">
+            <div className="filter">
+              <span>Duration</span>
+              <button onClick={(e) => handleDropdown(e)("duration")}>
+                {week === "All" ? "All Time" : `Past ${week} week`}
+              </button>
+              {dropdowns.duration ? (
+                <div className="dropdown">
+                  <ul>
+                    <li
                       onClick={() => {
                         setWeek("All");
                       }}
@@ -280,8 +385,8 @@ function VolunteerDashboard() {
                       value="All Time"
                     >
                       All Time
-                    </MenuItem>
-                    <MenuItem
+                    </li>
+                    <li
                       onClick={() => {
                         setWeek(1);
                       }}
@@ -289,234 +394,49 @@ function VolunteerDashboard() {
                       value="Past 1 week"
                     >
                       Past 1 week
-                    </MenuItem>
-                    {/* 
-                  <MenuItem 
+                    </li>
+                    <li
                       onClick={() => {
                         setWeek(4);
                       }}
                       className={week === 4 ? "checked" : ""}
-                      value="Past 4 week" 
-                      >Past 4 week
-                      </MenuItem>
-                  <MenuItem 
+                      value="Past 4 week"
+                    >
+                      Past 4 week
+                    </li>
+                    <li
                       onClick={() => {
                         setWeek(8);
                       }}
                       className={week === 8 ? "checked" : ""}
-                      value="Past 8 week"                  
-                  >Past 8 week</MenuItem>
-                  <MenuItem 
+                      value="Past 8 week"
+                    >
+                      Past 8 week
+                    </li>
+                    <li
                       onClick={() => {
                         setWeek(12);
                       }}
                       className={week === 12 ? "checked" : ""}
-                      value="Past 12 week"                  
-                  >Past 12 week</MenuItem>
-
-                  <Typography
+                      value="Past 12 week"
+                    >
+                      Past 12 week
+                    </li>
+                  </ul>
+                  <span
                     onClick={(e) => {
                       setSlicedVolunteer(filterweek(setLangue, setRating));
                       handleDropdown(e)("duration");
                     }}
                   >
                     Apply
-                  </Typography>                   */}
-                  </Box>
-                ) : (
-                  ""
-                )}
-              </NativeSelect>
-            </FormControl>
-
-            <Button onClick={(e) => handleDropdown(e)("duration")}>
-              {week === "All" ? "All Time" : `Past ${week} week`}
-            </Button>
-            {dropdowns.duration ? (
-              <Box>
-                <ul>
-                  <li
-                    onClick={() => {
-                      setWeek("All");
-                    }}
-                    className={week === "All" ? "checked" : ""}
-                    value="All Time"
-                  >
-                    All Time
-                  </li>
-                  <li
-                    onClick={() => {
-                      setWeek(1);
-                    }}
-                    className={week === 1 ? "checked" : ""}
-                    value="Past 1 week"
-                  >
-                    Past 1 week
-                  </li>
-                  <li
-                    onClick={() => {
-                      setWeek(4);
-                    }}
-                    className={week === 4 ? "checked" : ""}
-                    value="Past 4 week"
-                  >
-                    Past 4 week
-                  </li>
-                  <li
-                    onClick={() => {
-                      setWeek(8);
-                    }}
-                    className={week === 8 ? "checked" : ""}
-                    value="Past 8 week"
-                  >
-                    Past 8 week
-                  </li>
-                  <li
-                    onClick={() => {
-                      setWeek(12);
-                    }}
-                    className={week === 12 ? "checked" : ""}
-                    value="Past 12 week"
-                  >
-                    Past 12 week
-                  </li>
-                </ul>
-                <Typography
-                  onClick={(e) => {
-                    setSlicedVolunteer(filterweek(setLangue, setRating));
-                    handleDropdown(e)("duration");
-                  }}
-                >
-                  Apply
-                </Typography>
-              </Box>
-            ) : (
-              ""
-            )}
-
-            {/* </>
-              {/* </div> */}
-            {/* <div className="filter"> */}
-            <Typography>Language</Typography>
-            <Button onClick={(e) => handleDropdown(e)("language")}>
-              {language == "All" ? "All Languages" : language}
-            </Button>
-            {dropdowns.language ? (
-              <Box>
-                <ul>
-                  <li
-                    onClick={(e) => {
-                      setLangue("All");
-                    }}
-                    className={language == "All" ? "checked" : ""}
-                    value="All"
-                  >
-                    All
-                  </li>
-                  <li
-                    onClick={(e) => {
-                      setLangue("English");
-                    }}
-                    className={language == "English" ? "checked" : ""}
-                    value="English"
-                  >
-                    English
-                  </li>
-                  <li
-                    onClick={(e) => {
-                      setLangue("Hindi");
-                    }}
-                    className={language == "Hindi" ? "checked" : ""}
-                    value="Hindi"
-                  >
-                    Hindi
-                  </li>
-                </ul>
-                <Typography
-                  onClick={(e) => {
-                    setSlicedVolunteer(filterLanguage(setWeek, setRating));
-                    handleDropdown(e)("language");
-                  }}
-                >
-                  Apply
-                </Typography>
-              </Box>
-            ) : (
-              ""
-            )}
-
-            <Typography>Avg. Rating</Typography>
-            <Button onClick={(e) => handleDropdown(e)("rating")}>
-              {rating === "All" ? "All Ratings" : `${rating} Star`}
-            </Button>
-            {dropdowns.rating ? (
-              <Box>
-                <ul>
-                  <li
-                    onClick={() => {
-                      setRating("All");
-                    }}
-                    className={rating === "All" ? "checked" : ""}
-                    value="All ratings"
-                  >
-                    All
-                  </li>
-                  <li
-                    onClick={() => {
-                      setRating(4);
-                    }}
-                    className={rating === 4 ? "checked" : ""}
-                    value="4 Stars"
-                  >
-                    <img src={star} />
-                    <img src={star} />
-                    <img src={star} />
-                    <img src={star} />& Above
-                  </li>
-                  <li
-                    onClick={() => {
-                      setRating(3);
-                    }}
-                    className={rating === 3 ? "checked" : ""}
-                    value="3 Stars"
-                  >
-                    <img src={star} />
-                    <img src={star} />
-                    <img src={star} />
-                  </li>
-                  <li
-                    onClick={() => {
-                      setRating(2);
-                    }}
-                    className={rating === 2 ? "checked" : ""}
-                    value="2 Stars"
-                  >
-                    <img src={star} />
-                    <img src={star} />
-                  </li>
-                  <li
-                    onClick={() => {
-                      setRating(1);
-                    }}
-                    className={rating === 1 ? "checked" : ""}
-                    value="1 Stars"
-                  >
-                    <img src={star} />
-                  </li>
-                </ul>
-                <Typography
-                  onClick={(e) => {
-                    setSlicedVolunteer(ratings(setWeek, setLangue));
-                    handleDropdown(e)("rating");
-                  }}
-                >
-                  Select (1)
-                </Typography>
-              </Box>
-            ) : (
-              ""
-            )}
-          </Grid>
+                  </span>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
         ) : (
           ""
         )}
@@ -771,201 +691,201 @@ export default VolunteerDashboard;
 //     </button>
 //   </div>
 
-//   {selctedPathway === "Filter" ? (
-//     <div className="filterBar">
-//       <div className="filter">
-//         <span>Duration</span>
-//         <button onClick={(e) => handleDropdown(e)("duration")}>
-//           {week === "All" ? "All Time" : `Past ${week} week`}
-//         </button>
-//         {dropdowns.duration ? (
-//           <div className="dropdown">
-//             <ul>
-//               <li
-//                 onClick={() => {
-//                   setWeek("All");
-//                 }}
-//                 className={week === "All" ? "checked" : ""}
-//                 value="All Time"
-//               >
-//                 All Time
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setWeek(1);
-//                 }}
-//                 className={week === 1 ? "checked" : ""}
-//                 value="Past 1 week"
-//               >
-//                 Past 1 week
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setWeek(4);
-//                 }}
-//                 className={week === 4 ? "checked" : ""}
-//                 value="Past 4 week"
-//               >
-//                 Past 4 week
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setWeek(8);
-//                 }}
-//                 className={week === 8 ? "checked" : ""}
-//                 value="Past 8 week"
-//               >
-//                 Past 8 week
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setWeek(12);
-//                 }}
-//                 className={week === 12 ? "checked" : ""}
-//                 value="Past 12 week"
-//               >
-//                 Past 12 week
-//               </li>
-//             </ul>
-//             <span
-//               onClick={(e) => {
-//                 setSlicedVolunteer(filterweek(setLangue, setRating));
-//                 handleDropdown(e)("duration");
+// {selctedPathway === "Filter" ? (
+//   <div className="filterBar">
+//     <div className="filter">
+//       <span>Duration</span>
+//       <button onClick={(e) => handleDropdown(e)("duration")}>
+//         {week === "All" ? "All Time" : `Past ${week} week`}
+//       </button>
+//       {dropdowns.duration ? (
+//         <div className="dropdown">
+//           <ul>
+//             <li
+//               onClick={() => {
+//                 setWeek("All");
 //               }}
+//               className={week === "All" ? "checked" : ""}
+//               value="All Time"
 //             >
-//               Apply
-//             </span>
-//           </div>
-//         ) : (
-//           ""
-//         )}
-//       </div>
-//       <div className="filter">
-//         <span>Language</span>
-//         <button onClick={(e) => handleDropdown(e)("language")}>
-//           {language == "All" ? "All Languages" : language}
-//         </button>
-//         {dropdowns.language ? (
-//           <div className="dropdown">
-//             <ul>
-//               <li
-//                 onClick={(e) => {
-//                   setLangue("All");
-//                 }}
-//                 className={language == "All" ? "checked" : ""}
-//                 value="All"
-//               >
-//                 All
-//               </li>
-//               <li
-//                 onClick={(e) => {
-//                   setLangue("English");
-//                 }}
-//                 className={language == "English" ? "checked" : ""}
-//                 value="English"
-//               >
-//                 English
-//               </li>
-//               <li
-//                 onClick={(e) => {
-//                   setLangue("Hindi");
-//                 }}
-//                 className={language == "Hindi" ? "checked" : ""}
-//                 value="Hindi"
-//               >
-//                 Hindi
-//               </li>
-//             </ul>
-//             <span
-//               onClick={(e) => {
-//                 setSlicedVolunteer(filterLanguage(setWeek, setRating));
-//                 handleDropdown(e)("language");
+//               All Time
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(1);
 //               }}
+//               className={week === 1 ? "checked" : ""}
+//               value="Past 1 week"
 //             >
-//               Apply
-//             </span>
-//           </div>
-//         ) : (
-//           ""
-//         )}
-//       </div>
-//       <div className="filter">
-//         <span>Avg. Rating</span>
-//         <button onClick={(e) => handleDropdown(e)("rating")}>
-//           {rating === "All" ? "All Ratings" : `${rating} Star`}
-//         </button>
-//         {dropdowns.rating ? (
-//           <div className="dropdown">
-//             <ul>
-//               <li
-//                 onClick={() => {
-//                   setRating("All");
-//                 }}
-//                 className={rating === "All" ? "checked" : ""}
-//                 value="All ratings"
-//               >
-//                 All
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setRating(4);
-//                 }}
-//                 className={rating === 4 ? "checked" : ""}
-//                 value="4 Stars"
-//               >
-//                 <img src={star} />
-//                 <img src={star} />
-//                 <img src={star} />
-//                 <img src={star} />& Above
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setRating(3);
-//                 }}
-//                 className={rating === 3 ? "checked" : ""}
-//                 value="3 Stars"
-//               >
-//                 <img src={star} />
-//                 <img src={star} />
-//                 <img src={star} />
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setRating(2);
-//                 }}
-//                 className={rating === 2 ? "checked" : ""}
-//                 value="2 Stars"
-//               >
-//                 <img src={star} />
-//                 <img src={star} />
-//               </li>
-//               <li
-//                 onClick={() => {
-//                   setRating(1);
-//                 }}
-//                 className={rating === 1 ? "checked" : ""}
-//                 value="1 Stars"
-//               >
-//                 <img src={star} />
-//               </li>
-//             </ul>
-//             <span
-//               onClick={(e) => {
-//                 setSlicedVolunteer(ratings(setWeek, setLangue));
-//                 handleDropdown(e)("rating");
+//               Past 1 week
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(4);
 //               }}
+//               className={week === 4 ? "checked" : ""}
+//               value="Past 4 week"
 //             >
-//               Select (1)
-//             </span>
-//           </div>
-//         ) : (
-//           ""
-//         )}
-//       </div>
+//               Past 4 week
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(8);
+//               }}
+//               className={week === 8 ? "checked" : ""}
+//               value="Past 8 week"
+//             >
+//               Past 8 week
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(12);
+//               }}
+//               className={week === 12 ? "checked" : ""}
+//               value="Past 12 week"
+//             >
+//               Past 12 week
+//             </li>
+//           </ul>
+//           <span
+//             onClick={(e) => {
+//               setSlicedVolunteer(filterweek(setLangue, setRating));
+//               handleDropdown(e)("duration");
+//             }}
+//           >
+//             Apply
+//           </span>
+//         </div>
+//       ) : (
+//         ""
+//       )}
 //     </div>
-//   ) : (
-//     ""
-//   )}
+//     <div className="filter">
+//       <span>Language</span>
+//       <button onClick={(e) => handleDropdown(e)("language")}>
+//         {language == "All" ? "All Languages" : language}
+//       </button>
+//       {dropdowns.language ? (
+//         <div className="dropdown">
+//           <ul>
+//             <li
+//               onClick={(e) => {
+//                 setLangue("All");
+//               }}
+//               className={language == "All" ? "checked" : ""}
+//               value="All"
+//             >
+//               All
+//             </li>
+//             <li
+//               onClick={(e) => {
+//                 setLangue("English");
+//               }}
+//               className={language == "English" ? "checked" : ""}
+//               value="English"
+//             >
+//               English
+//             </li>
+//             <li
+//               onClick={(e) => {
+//                 setLangue("Hindi");
+//               }}
+//               className={language == "Hindi" ? "checked" : ""}
+//               value="Hindi"
+//             >
+//               Hindi
+//             </li>
+//           </ul>
+//           <span
+//             onClick={(e) => {
+//               setSlicedVolunteer(filterLanguage(setWeek, setRating));
+//               handleDropdown(e)("language");
+//             }}
+//           >
+//             Apply
+//           </span>
+//         </div>
+//       ) : (
+//         ""
+//       )}
+//     </div>
+//     <div className="filter">
+//       <span>Avg. Rating</span>
+//       <button onClick={(e) => handleDropdown(e)("rating")}>
+//         {rating === "All" ? "All Ratings" : `${rating} Star`}
+//       </button>
+//       {dropdowns.rating ? (
+//         <div className="dropdown">
+//           <ul>
+//             <li
+//               onClick={() => {
+//                 setRating("All");
+//               }}
+//               className={rating === "All" ? "checked" : ""}
+//               value="All ratings"
+//             >
+//               All
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(4);
+//               }}
+//               className={rating === 4 ? "checked" : ""}
+//               value="4 Stars"
+//             >
+//               <img src={star} />
+//               <img src={star} />
+//               <img src={star} />
+//               <img src={star} />& Above
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(3);
+//               }}
+//               className={rating === 3 ? "checked" : ""}
+//               value="3 Stars"
+//             >
+//               <img src={star} />
+//               <img src={star} />
+//               <img src={star} />
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(2);
+//               }}
+//               className={rating === 2 ? "checked" : ""}
+//               value="2 Stars"
+//             >
+//               <img src={star} />
+//               <img src={star} />
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(1);
+//               }}
+//               className={rating === 1 ? "checked" : ""}
+//               value="1 Stars"
+//             >
+//               <img src={star} />
+//             </li>
+//           </ul>
+//           <span
+//             onClick={(e) => {
+//               setSlicedVolunteer(ratings(setWeek, setLangue));
+//               handleDropdown(e)("rating");
+//             }}
+//           >
+//             Select (1)
+//           </span>
+//         </div>
+//       ) : (
+//         ""
+//       )}
+//     </div>
+//   </div>
+// ) : (
+//   ""
+// )}
 
 //   <table className="volunteer-overview-table">
 //     <thead>
@@ -1118,3 +1038,201 @@ export default VolunteerDashboard;
 //   </div>
 // </div>
 // </>
+
+//*************************************************************************************//
+
+// {selctedPathway === "Filter" ? (
+//   <div className="filterBar">
+//     <div className="filter">
+//       <span>Duration</span>
+//       <button onClick={(e) => handleDropdown(e)("duration")}>
+//         {week === "All" ? "All Time" : `Past ${week} week`}
+//       </button>
+//       {dropdowns.duration ? (
+//         <div className="dropdown">
+//           <ul>
+//             <li
+//               onClick={() => {
+//                 setWeek("All");
+//               }}
+//               className={week === "All" ? "checked" : ""}
+//               value="All Time"
+//             >
+//               All Time
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(1);
+//               }}
+//               className={week === 1 ? "checked" : ""}
+//               value="Past 1 week"
+//             >
+//               Past 1 week
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(4);
+//               }}
+//               className={week === 4 ? "checked" : ""}
+//               value="Past 4 week"
+//             >
+//               Past 4 week
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(8);
+//               }}
+//               className={week === 8 ? "checked" : ""}
+//               value="Past 8 week"
+//             >
+//               Past 8 week
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setWeek(12);
+//               }}
+//               className={week === 12 ? "checked" : ""}
+//               value="Past 12 week"
+//             >
+//               Past 12 week
+//             </li>
+//           </ul>
+//           <span
+//             onClick={(e) => {
+//               setSlicedVolunteer(filterweek(setLangue, setRating));
+//               handleDropdown(e)("duration");
+//             }}
+//           >
+//             Apply
+//           </span>
+//         </div>
+//       ) : (
+//         ""
+//       )}
+//     </div>
+//     <div className="filter">
+//       <span>Language</span>
+//       <button onClick={(e) => handleDropdown(e)("language")}>
+//         {language == "All" ? "All Languages" : language}
+//       </button>
+//       {dropdowns.language ? (
+//         <div className="dropdown">
+//           <ul>
+//             <li
+// onClick={(e) => {
+//   setLangue("All");
+// }}
+//               className={language == "All" ? "checked" : ""}
+//               value="All"
+//             >
+//               All
+//             </li>
+//             <li
+//               onClick={(e) => {
+//                 setLangue("English");
+//               }}
+//               className={language == "English" ? "checked" : ""}
+//               value="English"
+//             >
+//               English
+//             </li>
+//             <li
+//               onClick={(e) => {
+//                 setLangue("Hindi");
+//               }}
+//               className={language == "Hindi" ? "checked" : ""}
+//               value="Hindi"
+//             >
+//               Hindi
+//             </li>
+//           </ul>
+//           <span
+//             onClick={(e) => {
+//               setSlicedVolunteer(filterLanguage(setWeek, setRating));
+//               handleDropdown(e)("language");
+//             }}
+//           >
+//             Apply
+//           </span>
+//         </div>
+//       ) : (
+//         ""
+//       )}
+//     </div>
+//     <div className="filter">
+//       <span>Avg. Rating</span>
+//       <button onClick={(e) => handleDropdown(e)("rating")}>
+//         {rating === "All" ? "All Ratings" : `${rating} Star`}
+//       </button>
+//       {dropdowns.rating ? (
+//         <div className="dropdown">
+//           <ul>
+//             <li
+//               onClick={() => {
+//                 setRating("All");
+//               }}
+//               className={rating === "All" ? "checked" : ""}
+//               value="All ratings"
+//             >
+//               All
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(4);
+//               }}
+//               className={rating === 4 ? "checked" : ""}
+//               value="4 Stars"
+//             >
+// <img src={star} />
+// <img src={star} />
+// <img src={star} />
+// <img src={star} />& Above
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(3);
+//               }}
+//               className={rating === 3 ? "checked" : ""}
+//               value="3 Stars"
+//             >
+//               <img src={star} />
+//               <img src={star} />
+//               <img src={star} />
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(2);
+//               }}
+//               className={rating === 2 ? "checked" : ""}
+//               value="2 Stars"
+//             >
+//               <img src={star} />
+//               <img src={star} />
+//             </li>
+//             <li
+//               onClick={() => {
+//                 setRating(1);
+//               }}
+//               className={rating === 1 ? "checked" : ""}
+//               value="1 Stars"
+//             >
+//               <img src={star} />
+//             </li>
+//           </ul>
+//           <span
+//             onClick={(e) => {
+//               setSlicedVolunteer(ratings(setWeek, setLangue));
+//               handleDropdown(e)("rating");
+//             }}
+//           >
+//             Select (1)
+//           </span>
+//         </div>
+//       ) : (
+//         ""
+//       )}
+//     </div>
+//   </div>
+// ) : (
+//   ""
+// )}

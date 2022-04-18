@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "none",
     borderTop: "none",
     borderBottom: "2px solid #DEDEDE !important",
+    backgroundColor: "#F5F5F5",
   },
 }));
 
