@@ -125,6 +125,9 @@ const RenderContent = ({ data }) => {
     } else {
       return (
         <Typography
+          style={{
+            margin: "2rem 0",
+          }}
           variant="body1"
           dangerouslySetInnerHTML={{ __html: text }}
         />
@@ -180,7 +183,14 @@ const RenderContent = ({ data }) => {
               {data.value.map((item) => {
                 const header = DOMPurify.sanitize(item.header);
                 return (
-                  <TableCell dangerouslySetInnerHTML={{ __html: header }} />
+                  <TableCell
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                    sx={{ background: "#F5F5F5" }}
+                    className={classes.tableHead}
+                    dangerouslySetInnerHTML={{ __html: header }}
+                  />
                 );
               })}
             </TableRow>
@@ -188,11 +198,12 @@ const RenderContent = ({ data }) => {
           <TableBody>
             {dataInCol.map((item) => {
               return (
-                <TableRow hover={false}>
+                <TableRow className={classes.tableHead} hover={false}>
                   {item.map((row) => {
                     const rowData = DOMPurify.sanitize(row);
                     return (
                       <TableCell
+                        className={classes.tableHead}
                         dangerouslySetInnerHTML={{ __html: rowData }}
                       />
                     );
@@ -280,7 +291,7 @@ function ExerciseContent({ exerciseId, lang }) {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: 5, mb: 8 }}>
         {content &&
           content.map((contentItem, index) => (
             <RenderContent data={contentItem} key={index} classes={classes} />

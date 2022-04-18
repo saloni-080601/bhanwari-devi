@@ -1,19 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import theme from "../../theme/theme";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { HideHeader, PATHS } from "../../constant";
+import { PATHS } from "../../constant";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CloseIcon from "@mui/icons-material/Close";
 import useStyles from "./styles";
 import List from "@mui/material/List";
 import { DropDown, MobileDropDown } from "./DropDown";
-import { useRouteMatch } from "react-router-dom";
 import {
   AppBar,
   Box,
-  IconButton,
   Toolbar,
   Container,
   Button,
@@ -53,7 +51,7 @@ const PublicMenuOption = ({ leftDrawer, toggleDrawer }) => {
               sx={{ my: 2, color: "black" }}
               key={index}
             >
-              {menu}
+              <Typography variant="subtitle1">{menu}</Typography>
               {selectedMenu === menu && indicator ? (
                 <ExpandLessIcon />
               ) : (
@@ -155,38 +153,22 @@ function Header() {
       setElevation(0);
     }
   });
-  const [showHeader, setShowHeader] = React.useState(true);
-  const match = useRouteMatch({
-    path: HideHeader,
-  });
 
-  useEffect(() => {
-    if (match) {
-      console.log("matched");
-      setShowHeader(false);
-    } else {
-      console.log("not matched");
-      setShowHeader(true);
-    }
-  }, [match]);
   return (
     <ThemeProvider theme={theme}>
       <AppBar
         position="sticky"
         color="background"
         elevation={elevation}
-        style={{
-          display: showHeader ? "inherit" : "none",
-        }}
-        onhashchange={() => {
-          console.log("here changes");
-          if (window.location.pathname.split("/").includes("course-content")) {
-            console.log("here");
-            setShowHeader(false);
-          }
-        }}
+        // onhashchange={() => {
+        //   console.log("here changes");
+        //   if (window.location.pathname.split("/").includes("course-content")) {
+        //     console.log("here");
+        //     setShowHeader(false);
+        //   }
+        // }}
       >
-        <Container className={classes.mainbar} maxWidth="false">
+        <Container maxWidth="false">
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
               <Box sx={{ mr: 2 }} onClick={toggleDrawer(true)}>
