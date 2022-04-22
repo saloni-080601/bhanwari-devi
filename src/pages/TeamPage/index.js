@@ -19,9 +19,9 @@ import LinkedIn from "../../components/common/SocialMediaIcons/LinkedIn";
 import Twitter from "../../components/common/SocialMediaIcons/Twitter";
 
 /**
- *
- * @param {Array} arr
- * mutates Array inplace
+ * Mutates Array in place
+ * @param {Array} arr the Array to shuffle
+ * @return {Array} the shuffled Array
  */
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i >= 0; i--) {
@@ -101,9 +101,8 @@ function TeamPage() {
       <div>
         <Container
           maxWidth="lg"
-          style={
-            isActive ? { padding: 0, marginTop: "24px" } : { marginTop: "40px" }
-          }
+          mt={{ xs: "24px", sm: "40px" }}
+          style={isActive ? { padding: 0 } : {}}
         >
           <Container maxWidth="sm">
             <Stack spacing={5}>
@@ -158,7 +157,7 @@ function TeamPage() {
               </Box>
               <Typography
                 variant="body1"
-                align={!isActive ? "center" : "left"}
+                textAlign={{ xs: "left", sm: "center" }}
                 paragraph
               >
                 Aliqua id fugiat nostrud irure ex duis ea quis id quis ad et.
@@ -265,8 +264,8 @@ function TeamPage() {
                       if (
                         team[item].Photo &&
                         team[item].Name &&
-                        team[item].Content.length &&
                         team[item].Content &&
+                        team[item].Content.length &&
                         team[item].Designation
                       )
                         return (
