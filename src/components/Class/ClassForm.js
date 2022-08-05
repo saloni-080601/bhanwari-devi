@@ -192,6 +192,7 @@ function ClassForm({
         value: item.id,
       };
     });
+  console.log(data.Pathways.data.pathways, "data");
 
   const selectedCourseLabel = courses.find(
     (item) => item.value === classFields.course_id
@@ -200,6 +201,23 @@ function ClassForm({
   const selectedExerciseLabel = exercisesForSelectedCourse.find(
     (item) => item.id === classFields.exercise_id
   );
+  // const handleDiabled = () => {
+  //   if (
+  //     (classFields.type === "doubt_class" &&
+  //       classFields.course_id !== "" &&
+  //       classFields.exercise_id !== "" &&
+  //       classFields.title !== "" &&
+  //       classFields.description !== "" &&
+  //       classFields.start_time !== "" &&
+  //       classFields.end_time !== "" &&
+  //       classFields.max_enrolment !== "") ||
+  //     (classFields.type === "batch" &&
+  //       classFields.title !== "" &&
+  //       classFields.date !== "" &&
+  //       classFields.partner_id.length !== 0 &&
+  //       classFields.max_enrolment !== "")
+  //   )
+  // };
 
   const isActive = useMediaQuery("(max-width:" + breakpoints.values.sm + "px)");
   const classes = useStyles();
@@ -513,7 +531,6 @@ function ClassForm({
               </Grid>
               <Grid item xs={1} className={classes.FormCloseIcon}>
                 <CloseIcon
-                  color="text.secondary"
                   open
                   onClick={() => {
                     setShowModal(false);
