@@ -92,7 +92,6 @@ function ClassForm({
   );
   const [successModalMsg, setSuccessModalMsg] = useState("create");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-<<<<<<< Updated upstream
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [showError, setShowError] = useState({
     batch: true,
@@ -102,9 +101,6 @@ function ClassForm({
     batch: "Please enter a batch name",
     partner: "Please select one or more partners",
   });
-=======
-
->>>>>>> Stashed changes
   //getting pathway courses
   const dispatch = useDispatch();
   const data = useSelector((state) => {
